@@ -66,7 +66,8 @@ server
 - `pages` || the page components of our app, any routing will go between these components
 - `pages/components` || components used specifically on those pages
 - `util` || any utility functions that can be used anywhere on the client side
-- `index.jsx` || the start point of the client
+- `main.jsx` || the start point of the client
+- `vite.config.js` || to configure vite
 
 ### 2.2 Cypress structure
 
@@ -93,7 +94,7 @@ The base stack of the app is a MERN stack (Mongoose, Express, React, Node). Next
 ### 3.1 Configuration libraries
 
 - `dotenv` || To load the .env variables into the process environment. See [docs](https://www.npmjs.com/package/dotenv)
-- `webpack` / `html-webpack-plugin` || To bundle our React app and create a static app to host. See [docs](https://webpack.js.org/)
+- `vite` || To bundle our React app and create a static app to host. See [docs](https://vite.dev/)
 - `husky` || To run our tests and linter before committing. See [docs](https://typicode.github.io/husky/#/)
 - `eslint` || To check our code. We have different configurations for frontend and backend. You can check out the configuration in the `.eslintrc.(c)js` files in the respective `client` and `server` folders. See [docs](https://eslint.org/)
 - `prettier` || To automatically format our code. See [docs](https://prettier.io/)
