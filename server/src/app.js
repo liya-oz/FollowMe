@@ -1,6 +1,6 @@
 import express from "express";
 
-import userRouter from "./routes/user.js";
+import userRouter from "./routes/userRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 
 // Create an express server
