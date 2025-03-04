@@ -23,9 +23,7 @@ export const createUser = async (req, res) => {
     if (typeof user !== "object") {
       res.status(400).json({
         success: false,
-        msg: `You need to provide a 'user' object. Received: ${JSON.stringify(
-          user,
-        )}`,
+        msg: `You need to provide a 'user' object. Received: ${JSON.stringify(user)}`,
       });
       return;
     }
@@ -45,7 +43,10 @@ export const createUser = async (req, res) => {
       });
     } else {
       const newUser = await User.create(registrationData);
-      res.status(201).json({ success: true, user: newUser });
+      const userObject = newUser.toObject();
+      delete userObject.password;
+
+      res.status(201).json({ success: true, user: userObject });
     }
   } catch (error) {
     logError(error);
