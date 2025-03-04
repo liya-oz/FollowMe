@@ -1,17 +1,35 @@
 import { Routes, Route } from "react-router-dom";
-import Nav from "./components/Nav";
-import Home from "./pages/Home/Home";
-import CreateUser from "./pages/User/CreateUser";
-import UserList from "./pages/User/UserList";
+
+import Header from "./PLAYGROUND/components/Header";
+import Popup from "./PLAYGROUND/components/Popup";
+import Intro from "./PLAYGROUND/components/Intro";
+import Events from "./PLAYGROUND/components/Events";
+import CallForEvent from "./PLAYGROUND/components/CallForEvent";
+import Footer from "./PLAYGROUND/components/Footer";
+import LandingPage from "./PLAYGROUND/pages/LandingPage";
+import Login from "./PLAYGROUND/pages/Auth/Login";
+import Register from "./PLAYGROUND/pages/Auth/Register";
 
 const App = () => {
   return (
     <>
-      <Nav />
+      <Header />
+      <Popup />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/user" element={<UserList />} />
-        <Route path="/user/create" element={<CreateUser />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <Intro />
+              <Events />
+              <CallForEvent />
+              <LandingPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </>
   );
