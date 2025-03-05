@@ -2,6 +2,7 @@ import express from "express";
 
 import userRouter from "./routes/userRoutes.js";
 import authRouter from "./routes/authRoutes.js";
+import eventRouter from "./routes/eventRoutes.js";
 
 // Create an express server
 const app = express();
@@ -16,5 +17,6 @@ app.use(express.json());
  */
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/events", eventRouter);
 
 export default app;

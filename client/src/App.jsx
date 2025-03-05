@@ -1,20 +1,17 @@
 import { Routes, Route } from "react-router-dom";
-import Nav from "./components/Nav";
-import Home from "./pages/Home/Home";
-import CreateUser from "./pages/User/CreateUser";
-import UserList from "./pages/User/UserList";
+
+import LandingPage from "./pages/LandingPage/LandingPage";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 import "./assets/styles/global.scss";
 
 const App = () => {
   return (
-    <>
-      <Nav />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/user" element={<UserList />} />
-        <Route path="/user/create" element={<CreateUser />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
   );
 };
 
