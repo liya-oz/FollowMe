@@ -1,6 +1,6 @@
 import { useState } from "react";
-import "./EventList.scss";
 import PropTypes from "prop-types";
+import "./EventList.scss";
 
 const EventList = ({ listName, events }) => {
   const [selectedCategory, setSelectedCategory] = useState("All Category");
@@ -100,13 +100,14 @@ const EventList = ({ listName, events }) => {
     </div>
   );
 };
+
 EventList.propTypes = {
   listName: PropTypes.string.isRequired,
   events: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
-      category: PropTypes.string.isRequired,
       time: PropTypes.string.isRequired,
+      category: PropTypes.string.isRequired,
       image: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       location: PropTypes.string.isRequired,
