@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import Logo from "../../components/Logo"; 
-import "../../assets/styles/Register.css";
+import Logo from "../../components/Logo";
+import "../../assets/styles/Register.scss";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -54,7 +54,7 @@ const Login = () => {
           </form>
 
           <p className="link-text">
-            Don't have an account?{" "}
+            Do not have an account?{" "}
             <Link to="/register" className="link-word">
               Register
             </Link>

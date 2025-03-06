@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import Logo from "../../components/Logo"; 
-import "../../assets/styles/Register.css";
+import Logo from "../../components/Logo";
+import "../../assets/styles/Register.scss";
 
 const Register = () => {
   const [formData, setFormData] = useState({
