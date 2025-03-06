@@ -1,5 +1,8 @@
 import { useState } from "react";
-import "./Register.css";
+import { Link } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
+import Logo from "../../components/Logo"; 
+import "../../assets/styles/Register.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,54 +17,65 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
     setFormData({ name: "", email: "", password: "" });
   };
 
   return (
-    <div className="register-page">
-      <div className="register-container">
-        <div className="logo">
-          <h1>FOLLOWME</h1>
-        </div>
+    <div className="main-page">
+      <div className="page-container">
+        <Logo />
 
-        <div className="register-box">
-          <h2>Register</h2>
+        <div className="form-box">
+          <h2 className="title">Create an account</h2>
           <form onSubmit={handleSubmit}>
             <div className="input-group">
-              <label>Name:</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                placeholder="Name"
                 required
               />
             </div>
             <div className="input-group">
-              <label>Email:</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                placeholder="Email"
                 required
               />
             </div>
             <div className="input-group">
-              <label>Password:</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                placeholder="Password"
                 required
               />
             </div>
-            <button type="submit" className="register-btn">
+            <button type="submit" className="submit-btn">
               Register
             </button>
           </form>
+
+          <p className="link-text">
+            Already have an account?{" "}
+            <Link to="/login" className="link-word">
+              Login
+            </Link>
+          </p>
+
+          <div className="divider">or</div>
+
+          <button className="google-btn">
+            <FcGoogle className="google-icon" />
+            Continue with Google
+          </button>
         </div>
       </div>
     </div>
