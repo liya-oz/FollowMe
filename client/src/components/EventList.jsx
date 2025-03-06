@@ -1,6 +1,6 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
 import "./EventList.scss";
+import PropTypes from "prop-types";
 
 const EventList = ({ listName, events }) => {
   const [selectedCategory, setSelectedCategory] = useState("All Category");
@@ -48,20 +48,26 @@ const EventList = ({ listName, events }) => {
               ),
             )}
           </select>
-          <p htmlFor="from">From</p>
-          <input
-            type="date"
-            value={dateRange.from}
-            onChange={(e) => handleDateChange("from", e.target.value)}
-            className="event-list-date-input"
-          />
-          <p htmlFor="to">To</p>
-          <input
-            type="date"
-            value={dateRange.to}
-            onChange={(e) => handleDateChange("to", e.target.value)}
-            className="event-list-date-input"
-          />
+          <div className="event-list-date-filters">
+            <div className="event-list-filter-wrapper">
+              <p htmlFor="from">From</p>
+              <input
+                type="date"
+                value={dateRange.from}
+                onChange={(e) => handleDateChange("from", e.target.value)}
+                className="event-list-date-input"
+              />
+            </div>
+            <div className="event-list-filter-wrapper">
+              <p htmlFor="to">To</p>
+              <input
+                type="date"
+                value={dateRange.to}
+                onChange={(e) => handleDateChange("to", e.target.value)}
+                className="event-list-date-input"
+              />
+            </div>
+          </div>
         </div>
       </div>
       <div className="event-list-grid">
@@ -94,14 +100,13 @@ const EventList = ({ listName, events }) => {
     </div>
   );
 };
-
 EventList.propTypes = {
   listName: PropTypes.string.isRequired,
   events: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
-      time: PropTypes.string.isRequired,
       category: PropTypes.string.isRequired,
+      time: PropTypes.string.isRequired,
       image: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       location: PropTypes.string.isRequired,

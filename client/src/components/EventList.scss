@@ -1,19 +1,116 @@
 @use "../assets/styles/global" as *;
 
 .event-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   padding: var(--padding-large);
+  @media (max-width: 768px) {
+    h2 {
+      margin-bottom: 1.7rem;
+    }
+    padding: var(--padding-medium);
+  }
+  @media (max-width: 480px) {
+    padding: var(--padding-small);
+  }
 }
 
 .event-list-header {
   display: flex;
   margin-bottom: 10px;
   justify-content: space-between;
+  font-size: 1.5rem;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 1.25rem;
+  }
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
 }
 
 .event-list-filter {
   display: flex;
   gap: 20px;
   align-items: center;
+  font-size: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.875rem;
+    width: 100%;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.75rem;
+  }
+
+  .event-list-select,
+  .event-list-date-input {
+    width: 100%;
+    min-width: auto;
+
+    @media (min-width: 769px) {
+      width: auto;
+    }
+  }
+}
+
+.event-list-date-filters {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 1rem;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+    font-size: 0.875rem;
+    width: 100%;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.75rem;
+  }
+
+  .event-list-select,
+  .event-list-date-input {
+    width: 100%;
+    min-width: auto;
+
+    @media (min-width: 769px) {
+      width: auto;
+    }
+  }
+}
+
+.event-list-filter-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 1rem;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+    font-size: 0.875rem;
+    width: 100%;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.75rem;
+  }
+
+  .event-list-select,
+  .event-list-date-input {
+    width: 100%;
+    min-width: auto;
+
+    @media (min-width: 769px) {
+      width: auto;
+    }
+  }
 }
 
 .event-list-select {
@@ -27,11 +124,14 @@
   padding: 0.75rem 1rem;
   border-radius: var(--border-radius-small);
   font-family: var(--font-family);
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--black);
   font-weight: bold;
   padding-right: 2rem;
-  margin-right: 1rem;
+  @media (max-width: 480px) {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
 }
 
 .event-list-date-input {
@@ -40,22 +140,38 @@
   padding: 0.75rem 1rem;
   border-radius: var(--border-radius-small);
   font-family: var(--font-family);
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--black);
   font-weight: bold;
+  @media (max-width: 480px) {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
 }
+
 .event-list-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 50px;
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
 }
 
 .event-list-item {
   display: flex;
   flex-direction: row;
-  align-items: space-between;
   justify-content: space-between;
   margin: 20px 0;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin: 10px 0;
+  }
 
   .event-list-item-wrapper {
     position: relative;
@@ -65,18 +181,25 @@
     flex-wrap: wrap;
     width: 100%;
     gap: 30px;
+    @media (max-width: 768px) {
+      gap: 60px;
+    }
   }
 
   img {
     position: absolute;
     width: 100%;
-    height: 12rem;
+    height: auto;
+    max-height: 12rem;
     object-fit: cover;
     border-radius: var(--border-radius-large);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     filter: blur(1px);
     z-index: -1;
     opacity: 0.7;
+    @media (max-width: 480px) {
+      filter: blur(0.5px);
+    }
   }
 
   .event-list-item-date {
@@ -86,20 +209,37 @@
     border-radius: var(--border-radius-small);
     width: fit-content;
     margin: 10px;
+    @media (max-width: 480px) {
+      padding: 0.25rem 0.5rem;
+    }
   }
 
   .event-list-item-content {
     padding: var(--padding-small);
+    h3 {
+      font-size: 1rem;
+    }
+    @media (max-width: 480px) {
+      padding: var(--padding-small);
+    }
   }
 
   h3 {
     color: var(--white);
     text-shadow: 0px 0px 15px var(--dark-black);
+    font-size: 1.5rem;
+    @media (max-width: 480px) {
+      font-size: 1.25rem;
+    }
   }
 
   p {
     color: var(--white);
     text-shadow: 0px 0px 15px var(--dark-black);
     margin: 0;
+    font-size: 1rem;
+    @media (max-width: 480px) {
+      font-size: 0.875rem;
+    }
   }
 }
