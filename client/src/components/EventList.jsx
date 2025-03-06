@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import PropTypes from "prop-types";
 import "./EventList.scss";
 
 const EventList = ({ listName, events }) => {
@@ -92,6 +92,20 @@ const EventList = ({ listName, events }) => {
       </div>
     </div>
   );
+};
+
+EventList.propTypes = {
+  listName: PropTypes.string.isRequired,
+  events: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      time: PropTypes.string.isRequired,
+      category: PropTypes.string.isRequired,
+      image: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      location: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 };
 
 export default EventList;
