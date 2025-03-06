@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import Logo from "../../components/Logo";
+
+import Logo from "../../components/logo";
 import "../../assets/styles/Register.scss";
 
 const Login = () => {
@@ -49,7 +50,7 @@ const Login = () => {
               />
             </div>
             <button type="submit" className="submit-btn">
-              Login
+              login
             </button>
           </form>
 
@@ -63,7 +64,7 @@ const Login = () => {
           <div className="divider">or</div>
 
           <button className="google-btn">
-            <FcGoogle className="google-icon" />
+            <FcGoogle size={20} /> {/* Using FcGoogle for the Google icon */}
             Continue with Google
           </button>
         </div>
