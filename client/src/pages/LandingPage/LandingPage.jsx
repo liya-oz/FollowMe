@@ -9,6 +9,7 @@ import Footer from "../../components/Footer";
 const LandingPage = () => {
   const [events, setEvents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -24,19 +25,27 @@ const LandingPage = () => {
         console.error("Error fetching events:", error);
       }
     };
-
     fetchEvents();
   }, []);
 
+  const uniqueCities = Array.from(
+    new Set(events.map((event) => event.location)),
+  );
+
   return (
     <>
-      <Header setSearchQuery={setSearchQuery} />
+      <Header
+        setSearchQuery={setSearchQuery}
+        cities={uniqueCities}
+        setSelectedCity={setSelectedCity}
+      />
       <Popup />
       <Intro />
       <EventList
         listName="Upcoming Events"
         events={events}
         searchQuery={searchQuery}
+        selectedCity={selectedCity}
       />
       <CreateEvent />
       <Footer />

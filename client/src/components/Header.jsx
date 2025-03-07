@@ -4,27 +4,44 @@ import { FaSearch, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "../styles/Header.scss";
 
-function Header({ setSearchQuery }) {
-  const [inputValue, setInputValue] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Select your city");
+function Header({ setSearchQuery, cities, setSelectedCity }) {
+  const [titleInput, setTitleInput] = useState("");
+  const [cityInput, setCityInput] = useState("");
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
 
-  const cities = [
-    "Amsterdam",
-    "Rotterdam",
-    "The Hague",
-    "Utrecht",
-    "Eindhoven",
-    "Groningen",
-    "Tilburg",
-    "Almere",
-    "Breda",
-    "Nijmegen",
-  ];
-
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
+  const handleTitleSearch = ({ target: { value } }) => {
+    setTitleInput(value);
     setSearchQuery(value);
+  };
+
+  const handleCityInputChange = ({ target: { value } }) => {
+    setCityInput(value);
+    if (value.trim() === "") {
+      setSelectedCity("");
+      setShowCityDropdown(false);
+    } else {
+      setShowCityDropdown(true);
+    }
+  };
+
+  const filteredCities = cities.filter((city) =>
+    city.toLowerCase().startsWith(cityInput.toLowerCase()),
+  );
+
+  const handleCitySelect = (city) => {
+    setCityInput(city);
+    setSelectedCity(city);
+    setShowCityDropdown(false);
+  };
+
+  const handleCityKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (filteredCities.length > 0) {
+        handleCitySelect(filteredCities[0]);
+      } else {
+        setShowCityDropdown(false);
+      }
+    }
   };
 
   return (
@@ -36,23 +53,30 @@ function Header({ setSearchQuery }) {
         <FaSearch size={18} />
         <input
           type="text"
-          placeholder="Search by event title..."
-          value={inputValue}
-          onChange={handleSearch}
+          placeholder="Search by event name..."
+          value={titleInput}
+          onChange={handleTitleSearch}
         />
       </div>
       <div className="right-section">
-        <div className="dropdown">
-          <button>
-            <FaMapMarkerAlt size={18} /> {selectedCity}
-          </button>
-          <div className="dropdown-content">
-            {cities.map((city, index) => (
-              <div key={index} onClick={() => setSelectedCity(city)}>
-                {city}
-              </div>
-            ))}
-          </div>
+        <div className="city-search">
+          <FaMapMarkerAlt size={18} />
+          <input
+            type="text"
+            placeholder="Enter your city..."
+            value={cityInput}
+            onChange={handleCityInputChange}
+            onKeyDown={handleCityKeyDown}
+          />
+          {showCityDropdown && cityInput && filteredCities.length > 0 && (
+            <div className="dropdown-content">
+              {filteredCities.map((city, index) => (
+                <div key={index} onClick={() => handleCitySelect(city)}>
+                  {city}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <Link to="/register" className="sign-in-button">
           Sign In
@@ -64,6 +88,8 @@ function Header({ setSearchQuery }) {
 
 Header.propTypes = {
   setSearchQuery: PropTypes.func.isRequired,
+  cities: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setSelectedCity: PropTypes.func.isRequired,
 };
 
 export default Header;

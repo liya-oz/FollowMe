@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import "./EventList.scss";
 
-const EventList = ({ listName, events, searchQuery }) => {
+const EventList = ({ listName, events, searchQuery, selectedCity }) => {
   const [selectedCategory, setSelectedCategory] = useState("All Category");
   const [dateRange, setDateRange] = useState({
     from: new Date().toISOString().split("T")[0],
@@ -29,7 +29,9 @@ const EventList = ({ listName, events, searchQuery }) => {
       (selectedCategory === "All Category" ||
         event.category === selectedCategory) &&
       (!fromDate || eventDate >= fromDate) &&
-      (!toDate || eventDate <= toDate)
+      (!toDate || eventDate <= toDate) &&
+      (!selectedCity ||
+        event.location.toLowerCase() === selectedCity.toLowerCase())
     );
   });
 
@@ -111,6 +113,7 @@ const EventList = ({ listName, events, searchQuery }) => {
 EventList.propTypes = {
   listName: PropTypes.string.isRequired,
   searchQuery: PropTypes.string.isRequired,
+  selectedCity: PropTypes.string,
   events: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
