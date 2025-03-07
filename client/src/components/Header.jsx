@@ -5,43 +5,47 @@ import "../styles/Header.scss";
 
 function Header() {
   const [selectedCity, setSelectedCity] = useState("Select your city");
-  const cities = ["New York", "Los Angeles", "Chicago", "Houston", "Miami"];
+  const cities = [
+    "Amsterdam",
+    "Rotterdam",
+    "The Hague",
+    "Utrecht",
+    "Eindhoven",
+    "Groningen",
+    "Tilburg",
+    "Almere",
+    "Breda",
+    "Nijmegen",
+  ];
 
   return (
-    <header>
-      {/* Logo Section */}
-      <div>
-        <img src="/logo.png" alt="FollowMe Logo" />
-        <span>FollowMe</span>
+    <header className="header">
+      <div className="logo">
+        <img src="/logo.png" alt="FollowMe Logo" className="logo-image" />
       </div>
 
-      {/* Search Bar */}
-      <div>
+      <div className="search-bar">
         <FaSearch size={18} />
         <input type="text" placeholder="Search..." />
       </div>
 
-      {/* City Dropdown */}
-      <div>
-        <button>
-          <FaMapMarkerAlt size={18} /> {selectedCity}
-        </button>
-        <div>
-          {cities.map((city, index) => (
-            <div key={index} onClick={() => setSelectedCity(city)}>
-              {city}
-            </div>
-          ))}
+      <div className="right-section">
+        <div className="dropdown">
+          <button>
+            <FaMapMarkerAlt size={18} /> {selectedCity}
+          </button>
+          <div className="dropdown-content">
+            {cities.map((city, index) => (
+              <div key={index} onClick={() => setSelectedCity(city)}>
+                {city}
+              </div>
+            ))}
+          </div>
         </div>
+        <Link to="/register" className="sign-in-button">
+          Sign In
+        </Link>
       </div>
-
-      {/* Authentication Links */}
-      <div>
-        <Link to="/login">Login</Link> | <Link to="/register">Register</Link>
-      </div>
-
-      {/* Sign In Button */}
-      <button>Sign In</button>
     </header>
   );
 }
