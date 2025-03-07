@@ -8,6 +8,7 @@ import Footer from "../../components/Footer";
 
 const LandingPage = () => {
   const [events, setEvents] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -29,10 +30,14 @@ const LandingPage = () => {
 
   return (
     <>
-      <Header />
+      <Header setSearchQuery={setSearchQuery} />
       <Popup />
       <Intro />
-      <EventList listName="Upcoming Events" events={events} />
+      <EventList
+        listName="Upcoming Events"
+        events={events}
+        searchQuery={searchQuery}
+      />
       <CreateEvent />
       <Footer />
     </>

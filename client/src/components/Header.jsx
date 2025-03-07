@@ -1,10 +1,13 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { FaSearch, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "../styles/Header.scss";
 
-function Header() {
+function Header({ setSearchQuery }) {
+  const [inputValue, setInputValue] = useState("");
   const [selectedCity, setSelectedCity] = useState("Select your city");
+
   const cities = [
     "Amsterdam",
     "Rotterdam",
@@ -18,17 +21,26 @@ function Header() {
     "Nijmegen",
   ];
 
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+    setSearchQuery(value);
+  };
+
   return (
     <header className="header">
       <div className="logo">
         <img src="/logo.png" alt="FollowMe Logo" className="logo-image" />
       </div>
-
       <div className="search-bar">
         <FaSearch size={18} />
-        <input type="text" placeholder="Search..." />
+        <input
+          type="text"
+          placeholder="Search by event title..."
+          value={inputValue}
+          onChange={handleSearch}
+        />
       </div>
-
       <div className="right-section">
         <div className="dropdown">
           <button>
@@ -49,5 +61,9 @@ function Header() {
     </header>
   );
 }
+
+Header.propTypes = {
+  setSearchQuery: PropTypes.func.isRequired,
+};
 
 export default Header;
