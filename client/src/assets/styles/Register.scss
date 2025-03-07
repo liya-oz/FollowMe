@@ -65,12 +65,13 @@ body {
     padding: 0px 10px;
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(5px);
-    color: var(--white);
+    color: var(--black);
     border: none;
     outline: none;
+    font-weight: bold;
 
     &::placeholder {
-      color: var(--white);
+      color: var(--black);
       font-size: 14px;
       font-weight: 500;
     }

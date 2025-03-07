@@ -3,10 +3,10 @@ import express from "express";
 import userRouter from "./routes/userRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import eventRouter from "./routes/eventRoutes.js";
-
+import cors from "cors";
 // Create an express server
 const app = express();
-
+app.use(cors());
 // Tell express to use the json middleware
 app.use(express.json());
 

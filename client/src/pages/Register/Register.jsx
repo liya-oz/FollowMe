@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-
 import Logo from "../../components/logo";
+import useAuth from "../../hooks/useAuth";
 import "../../assets/styles/Register.scss";
 
 const Register = () => {
@@ -12,13 +12,20 @@ const Register = () => {
     password: "",
   });
 
+  const navigate = useNavigate();
+  const { register, error, message } = useAuth();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormData({ name: "", email: "", password: "" });
+    const success = await register(formData);
+
+    if (success) {
+      navigate("/login");
+    }
   };
 
   return (
@@ -28,6 +35,7 @@ const Register = () => {
 
         <div className="form-box">
           <h2 className="title">Create an account</h2>
+
           <form onSubmit={handleSubmit}>
             <div className="input-group">
               <input
@@ -70,6 +78,9 @@ const Register = () => {
               Login
             </Link>
           </p>
+
+          {error && <h3 className="error-message">{error}</h3>}
+          {message && <h3 className="success-message">{message}</h3>}
 
           <div className="divider">or</div>
 
