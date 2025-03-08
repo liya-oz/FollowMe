@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import Logo from "../../components/logo";
 import useAuth from "../../hooks/useAuth";
-import "../../assets/styles/Register.scss";
+import "../../styles/Register.scss";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
