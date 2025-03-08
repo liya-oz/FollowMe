@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import "./EventList.scss";
 
-const EventList = ({ listName, events }) => {
+const EventList = ({ listName, events, searchQuery, selectedCity }) => {
   const [selectedCategory, setSelectedCategory] = useState("All Category");
   const [dateRange, setDateRange] = useState({
     from: new Date().toISOString().split("T")[0],
@@ -17,16 +17,21 @@ const EventList = ({ listName, events }) => {
     setDateRange((prev) => ({ ...prev, [field]: value }));
   };
 
+  const query = searchQuery.toLowerCase().trim();
+
   const filteredEvents = events.filter((event) => {
     const eventDate = new Date(event.time);
     const fromDate = dateRange.from ? new Date(dateRange.from) : null;
     const toDate = dateRange.to ? new Date(dateRange.to) : null;
 
     return (
+      (!query || event.title.toLowerCase().includes(query)) &&
       (selectedCategory === "All Category" ||
         event.category === selectedCategory) &&
       (!fromDate || eventDate >= fromDate) &&
-      (!toDate || eventDate <= toDate)
+      (!toDate || eventDate <= toDate) &&
+      (!selectedCity ||
+        event.location.toLowerCase() === selectedCity.toLowerCase())
     );
   });
 
@@ -50,7 +55,7 @@ const EventList = ({ listName, events }) => {
           </select>
           <div className="event-list-date-filters">
             <div className="event-list-filter-wrapper">
-              <p htmlFor="from">From</p>
+              <p>From</p>
               <input
                 type="date"
                 value={dateRange.from}
@@ -59,7 +64,7 @@ const EventList = ({ listName, events }) => {
               />
             </div>
             <div className="event-list-filter-wrapper">
-              <p htmlFor="to">To</p>
+              <p>To</p>
               <input
                 type="date"
                 value={dateRange.to}
@@ -71,31 +76,35 @@ const EventList = ({ listName, events }) => {
         </div>
       </div>
       <div className="event-list-grid">
-        {filteredEvents.map((event) => (
-          <div
-            key={event._id}
-            className="event-list-item"
-            onClick={() => {
-              window.location.href = `/events/${event._id}`;
-            }}
-          >
-            <div className="event-list-item-wrapper">
-              <img src={event.image} alt={event.title} />
-              <div className="event-list-item-date">
-                <p>
-                  {new Date(event.time).toLocaleString("en-US", {
-                    month: "short",
-                    day: "2-digit",
-                  })}
-                </p>
-              </div>
-              <div className="event-list-item-content">
-                <h3 className="event-list-item-title">{event.title}</h3>
-                <p className="event-list-item-location">{event.location}</p>
+        {filteredEvents.length > 0 ? (
+          filteredEvents.map((event) => (
+            <div
+              key={event._id}
+              className="event-list-item"
+              onClick={() => (window.location.href = `/events/${event._id}`)}
+            >
+              <div className="event-list-item-wrapper">
+                <img src={event.image} alt={event.title} />
+                <div className="event-list-item-date">
+                  <p>
+                    {new Date(event.time).toLocaleString("en-US", {
+                      month: "short",
+                      day: "2-digit",
+                    })}
+                  </p>
+                </div>
+                <div className="event-list-item-content">
+                  <h3 className="event-list-item-title">{event.title}</h3>
+                  <p className="event-list-item-location">
+                    📍 {event.location}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No events found matching the filters.</p>
+        )}
       </div>
     </div>
   );
@@ -103,6 +112,8 @@ const EventList = ({ listName, events }) => {
 
 EventList.propTypes = {
   listName: PropTypes.string.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  selectedCity: PropTypes.string,
   events: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
