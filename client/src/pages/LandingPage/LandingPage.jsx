@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import Popup from "../../components/Popup";
 import Intro from "../../components/Intro";
 import EventList from "../../components/EventList";
 import CreateEvent from "../../components/CreateEvent";
@@ -40,7 +39,6 @@ const LandingPage = () => {
         cities={uniqueCities}
         setSelectedCity={setSelectedCity}
       />
-      <Popup />
       <Intro />
       <div className="upcoming-events">
         <EventList
