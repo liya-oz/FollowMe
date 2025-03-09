@@ -1,0 +1,87 @@
+@use "./global" as *;
+
+$container-padding: 2rem;
+$box-padding: 2rem;
+$box-border-radius: 1rem;
+$box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$button-border-radius: 18px;
+$button-height: 50px;
+$button-padding: 0 20px;
+$button-margin: 1.5rem auto 0;
+
+.event-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: $container-padding;
+}
+
+.event-box {
+  background-color: #fafef6;
+  padding: $box-padding;
+  border-radius: $box-border-radius;
+  box-shadow: $box-shadow;
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.event-title {
+  color: var(--dark-black);
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .event-title {
+    font-size: 1.75rem;
+  }
+}
+
+.event-description {
+  color: var(--dark-black);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .event-description {
+    font-size: 1rem;
+  }
+}
+
+.highlight {
+  font-weight: 600;
+}
+
+.event-button {
+  background: var(--white);
+  color: var(--primary-green);
+  font-weight: 600;
+  border: none;
+  border-radius: $button-border-radius;
+  cursor: pointer;
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.303);
+  font-size: 1rem;
+  height: $button-height;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: $button-padding;
+  margin: $button-margin;
+}
+
+.event-button:hover {
+  background: #f3f3f3;
+}
+
+.event-button:active {
+  transform: scale(0.98);
+}

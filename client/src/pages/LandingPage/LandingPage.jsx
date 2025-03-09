@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Intro from "../../components/Intro";
 import EventList from "../../components/EventList";
-import CreateEvent from "../../components/CreateEvent";
+import EventCreationBox from "../../components/EventCreationBox";
 import Footer from "../../components/Footer";
 import "../../styles/LandingPage.scss";
 
@@ -48,7 +48,7 @@ const LandingPage = () => {
           selectedCity={selectedCity}
         />
       </div>
-      <CreateEvent />
+      <EventCreationBox />
       <Footer />
     </>
   );
