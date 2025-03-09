@@ -1,4 +1,4 @@
-import "./Footer.scss";
+import "../styles/Footer.scss";
 import { LuCalendarPlus2 } from "react-icons/lu";
 import { LuMail } from "react-icons/lu";
 import { LuUsers } from "react-icons/lu";
