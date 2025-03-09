@@ -1,6 +1,10 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import "./EventList.scss";
+import "../styles/EventList.scss";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
 const EventList = ({ listName, events, searchQuery, selectedCity }) => {
   const [selectedCategory, setSelectedCategory] = useState("All Category");
@@ -8,6 +12,18 @@ const EventList = ({ listName, events, searchQuery, selectedCity }) => {
     from: new Date().toISOString().split("T")[0],
     to: "",
   });
+  const [open, setOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const handleOpen = (event) => {
+    setSelectedEvent(event);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedEvent(null);
+  };
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
@@ -81,7 +97,7 @@ const EventList = ({ listName, events, searchQuery, selectedCity }) => {
             <div
               key={event._id}
               className="event-list-item"
-              onClick={() => (window.location.href = `/events/${event._id}`)}
+              onClick={() => handleOpen(event)}
             >
               <div className="event-list-item-wrapper">
                 <img src={event.image} alt={event.title} />
@@ -96,7 +112,7 @@ const EventList = ({ listName, events, searchQuery, selectedCity }) => {
                 <div className="event-list-item-content">
                   <h3 className="event-list-item-title">{event.title}</h3>
                   <p className="event-list-item-location">
-                    📍 {event.location}
+                    <FaMapMarkerAlt size={14} /> {event.location}
                   </p>
                 </div>
               </div>
@@ -106,6 +122,33 @@ const EventList = ({ listName, events, searchQuery, selectedCity }) => {
           <p>No events found matching the filters.</p>
         )}
       </div>
+      {/* Modal */}
+      <Modal open={open} onClose={handleClose}>
+        <Box className="event-modal">
+          <h2>Sign Up to Join Events</h2>
+          <p>
+            You need to login or register to apply for &quot;
+            {selectedEvent?.title}
+            &quot; event.
+          </p>
+          <div>
+            <Button
+              className="event-modal-button"
+              variant="contained"
+              onClick={() => (window.location.href = "/login")}
+            >
+              Login
+            </Button>
+            <Button
+              className="event-modal-button"
+              variant="contained"
+              onClick={() => (window.location.href = "/register")}
+            >
+              Register
+            </Button>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };

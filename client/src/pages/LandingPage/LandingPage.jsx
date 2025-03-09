@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import Popup from "../../components/Popup";
 import Intro from "../../components/Intro";
 import EventList from "../../components/EventList";
 import CreateEvent from "../../components/CreateEvent";
 import Footer from "../../components/Footer";
+import "../../styles/LandingPage.scss";
 
 const LandingPage = () => {
   const [events, setEvents] = useState([]);
@@ -39,14 +39,15 @@ const LandingPage = () => {
         cities={uniqueCities}
         setSelectedCity={setSelectedCity}
       />
-      <Popup />
       <Intro />
-      <EventList
-        listName="Upcoming Events"
-        events={events}
-        searchQuery={searchQuery}
-        selectedCity={selectedCity}
-      />
+      <div className="upcoming-events">
+        <EventList
+          listName="Upcoming Events"
+          events={events}
+          searchQuery={searchQuery}
+          selectedCity={selectedCity}
+        />
+      </div>
       <CreateEvent />
       <Footer />
     </>
