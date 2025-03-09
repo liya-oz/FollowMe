@@ -3,6 +3,7 @@ import express from "express";
 import userRouter from "./routes/userRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import eventRouter from "./routes/eventRoutes.js";
+
 import eventAttendeeRouter from "./routes/eventAttendeeRoutes.js";
 
 // Create an express server
