@@ -5,6 +5,7 @@ import Intro from "../../components/Intro";
 import EventList from "../../components/EventList";
 import CreateEvent from "../../components/CreateEvent";
 import Footer from "../../components/Footer";
+import "../../styles/LandingPage.scss";
 
 const LandingPage = () => {
   const [events, setEvents] = useState([]);
@@ -41,12 +42,14 @@ const LandingPage = () => {
       />
       <Popup />
       <Intro />
-      <EventList
-        listName="Upcoming Events"
-        events={events}
-        searchQuery={searchQuery}
-        selectedCity={selectedCity}
-      />
+      <div className="upcoming-events">
+        <EventList
+          listName="Upcoming Events"
+          events={events}
+          searchQuery={searchQuery}
+          selectedCity={selectedCity}
+        />
+      </div>
       <CreateEvent />
       <Footer />
     </>

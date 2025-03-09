@@ -14,12 +14,20 @@
     #88bc52 37%,
     #a0e15a 100%
   );
-  --glass-grey: #fafef6;
+  --glass-grey: #f4f4f486;
   --secondary-red: #ff8f8f;
   --primary-red: #ff0000;
   --secondary-green: #3aa981;
   --dark-red: #ff0000;
   --font-family: "Poppins", sans-serif;
+  --padding-small: 0.5rem;
+  --padding-medium: 1rem;
+  --padding-large: 2rem;
+  --border-radius-small: 0.5rem;
+  --border-radius-medium: 1rem;
+  --border-radius-large: 1rem;
+  --breakpoint-mobile: 480px;
+  --breakpoint-tablet: 768px;
 }
 
 body {

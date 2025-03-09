@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import "./EventList.scss";
+import "../styles/EventList.scss";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 const EventList = ({ listName, events, searchQuery, selectedCity }) => {
   const [selectedCategory, setSelectedCategory] = useState("All Category");
@@ -96,7 +97,7 @@ const EventList = ({ listName, events, searchQuery, selectedCity }) => {
                 <div className="event-list-item-content">
                   <h3 className="event-list-item-title">{event.title}</h3>
                   <p className="event-list-item-location">
-                    📍 {event.location}
+                    <FaMapMarkerAlt size={14} /> {event.location}
                   </p>
                 </div>
               </div>
