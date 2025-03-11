@@ -1,67 +1,65 @@
-// THis file is for next aims:
-//
-// Holds the auth token (and could be extended to include expiration, user info, etc.)
-//
-// Provides helper methods to log in, log out, and eventually refresh tokens
-//
-// Wraps your application so that every component can access the authentication state
-
-// It has a mock token.
-//
-//  How it works! When the app loads:
-
-// It checks localStorage for an authToken and sets it in state.
-// It simulates a token validation process.
-// Once "validated," it removes the loading state.
-// Login Process (Mocked for Now):
-
-// The login function automatically assigns a mock token ("dummyToken123") if no token is provided.
-// The token is stored in localStorage and in the state.
-// The user is redirected to /discovery (a protected route).
-// Logout Process:
-
-// It removes the token from localStorage and clears state.
-// It redirects the user back to the login page.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { AuthContext } from "./AuthProvider";
+import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(() =>
     localStorage.getItem("authToken"),
   );
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Sync auth state with localStorage
   useEffect(() => {
-    console.log("AuthProvider mounted. Checking token...");
-    console.log("Current authToken:", authToken);
-    setLoading(false);
-  }, [authToken]);
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken && !authToken) {
+      console.log("Found token in localStorage:", storedToken);
+      setAuthToken(storedToken);
+    }
+  }, []); // Runs only on mount
 
-  // Mock login function (assigns a fake token)
-  const login = (token = "dummyToken123") => {
-    console.log("Login function called! Storing token:", token);
-    localStorage.setItem("authToken", token);
-    setAuthToken(token);
-    console.log("Token set! New authToken state:", token);
-    return true; // Simulate successful login
+  // Redirect when authToken updates
+  useEffect(() => {
+    if (authToken) {
+      console.log("User authenticated, redirecting to /discovery...");
+      navigate("/discovery");
+    }
+  }, [authToken, navigate]);
+
+  const login = async (credentials) => {
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials),
+      });
+
+      if (!response.ok) throw new Error(`Login failed: ${response.statusText}`);
+
+      const { token } = await response.json();
+      console.log("Login successful! Received token:", token);
+
+      localStorage.setItem("authToken", token);
+      setAuthToken(token);
+      return true;
+    } catch (error) {
+      console.error("Login error:", error);
+      return false;
+    }
   };
 
   const logout = () => {
-    console.log("Logout function called! Clearing token...");
+    console.log("Logout initiated, clearing token...");
     localStorage.removeItem("authToken");
     setAuthToken(null);
-    console.log("Token cleared. Redirecting to /login");
     navigate("/login");
   };
 
-  const value = { authToken, login, logout };
-
-  if (loading) return <div>Loading...</div>;
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ authToken, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 AuthProvider.propTypes = {

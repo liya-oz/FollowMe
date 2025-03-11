@@ -1,17 +1,19 @@
-// This component checks whether the user is authenticated by using your AuthContext.
-//  If the user has a valid token, it renders the nested routes; otherwise,
-//  it redirects to /login.
-
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { AuthContext } from "../AuthProvider";
+import { AuthContext } from "../contexts/AuthContext";
 
 const PrivateRoute = () => {
   const { authToken } = useContext(AuthContext);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
-  // If authToken exists, the user is authenticated and we render the nested routes.
-  // Otherwise, redirect to the login page (or we can change to landing page).
-  return authToken ? <Outlet /> : <Navigate to="/login" />;
+  useEffect(() => {
+    console.log("Checking authToken in PrivateRoute:", authToken);
+    setIsAuthChecked(true);
+  }, [authToken]);
+
+  if (!isAuthChecked) return <div>Loading authentication...</div>;
+
+  return authToken ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;

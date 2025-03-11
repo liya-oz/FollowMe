@@ -4,7 +4,7 @@
 
 import { useContext } from "react";
 import { Outlet, Link } from "react-router-dom";
-import { AuthContext } from "./AuthProvider";
+import { AuthContext } from "./contexts/AuthContext";
 
 const PrivateLayout = () => {
   const { logout } = useContext(AuthContext);
@@ -33,7 +33,6 @@ const PrivateLayout = () => {
               <Link to="/settings">Settings</Link>
             </li>
             <li>
-              {/* Our backend with user ID is available too. */}
               <Link to="/user/1">Profile</Link>
             </li>
             <li>
