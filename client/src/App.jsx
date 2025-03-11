@@ -17,7 +17,7 @@ import Chats from "./pages/Chats/Chats";
 import Settings from "./pages/Settings/Settings";
 import UserProfile from "./pages/UserProfile/UserProfile";
 
-// Layout for logged-in users (includes header/navbar,footer, etc.)
+// Layout for logged-in users (includes header/navbar,footer.)
 import PrivateLayout from "./PrivateLayout";
 
 // Component that checks for authentication and renders nested routes (or redirects (to login page/or landing?))
