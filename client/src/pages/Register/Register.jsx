@@ -12,11 +12,36 @@ const Register = () => {
     password: "",
   });
 
+  const [passwordStrength, setPasswordStrength] = useState(null);
+
   const navigate = useNavigate();
   const { register, error, message } = useAuth();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    if (e.target.name === "password") {
+      updatePasswordStrength(e.target.value);
+    }
+  };
+
+  const updatePasswordStrength = (password) => {
+    if (password.length === 0) {
+      setPasswordStrength(null);
+      return;
+    }
+
+    let width = "50%";
+    let color = "red";
+    let label = "Weak";
+
+    if (password.length >= 8 && /[^A-Za-z0-9]/.test(password)) {
+      width = "100%";
+      color = "green";
+      label = "Strong";
+    }
+
+    setPasswordStrength({ width, color, label });
   };
 
   const handleSubmit = async (e) => {
@@ -43,7 +68,7 @@ const Register = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Name"
+                placeholder="Insert your name"
                 autoComplete="name"
                 required
               />
@@ -54,7 +79,7 @@ const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email"
+                placeholder="Insert your email"
                 autoComplete="email"
                 required
               />
@@ -65,11 +90,31 @@ const Register = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Password"
+                placeholder="Insert your password"
                 autoComplete="new-password"
                 required
               />
+              {passwordStrength && (
+                <div className="password-strength">
+                  <div className="strength-bar">
+                    <div
+                      className="strength-fill"
+                      style={{
+                        width: passwordStrength.width,
+                        backgroundColor: passwordStrength.color,
+                      }}
+                    ></div>
+                  </div>
+                  <p
+                    className="strength-label"
+                    style={{ color: passwordStrength.color }}
+                  >
+                    {passwordStrength.label}
+                  </p>
+                </div>
+              )}
             </div>
+
             <button type="submit" className="submit-btn">
               Register
             </button>

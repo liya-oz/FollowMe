@@ -32,16 +32,20 @@ export const validateUser = (userObject) => {
     errorList.push(validatedKeysMessage);
   }
 
-  if (userObject.name == null) {
-    errorList.push("name is a required field");
+  if (!userObject.name || userObject.name.length < 3) {
+    errorList.push("Name must be at least 3 characters long.");
   }
 
-  if (userObject.email == null) {
-    errorList.push("email is a required field");
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!userObject.email || !emailRegex.test(userObject.email)) {
+    errorList.push("Invalid email format.");
   }
 
-  if (userObject.password == null) {
-    errorList.push("password is a required field");
+  const passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).*$/;
+  if (!userObject.password || userObject.password.length < 8) {
+    errorList.push("Password must be at least 8 characters long.");
+  } else if (!passwordRegex.test(userObject.password)) {
+    errorList.push("Password must contain at least one special character.");
   }
 
   return errorList;

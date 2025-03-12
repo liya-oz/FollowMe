@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import Logo from "../../components/logo";
 import useAuth from "../../hooks/useAuth";
@@ -48,7 +48,7 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email"
+                placeholder="Insert your email"
                 autoComplete="email"
                 required
               />
@@ -59,7 +59,7 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Password"
+                placeholder="Insert your password"
                 autoComplete="current-password"
                 required
               />
@@ -68,10 +68,14 @@ const Login = () => {
               Login
             </button>
           </form>
-
           {error && <h3 className="error-message">{error}</h3>}
           {message && <h3 className="success-message">{message}</h3>}
-
+          <p className="link-text">
+            You do not have an account?{" "}
+            <Link to="/register" className="link-word">
+              register
+            </Link>
+          </p>
           <div className="divider">or</div>
 
           <button className="google-btn">
