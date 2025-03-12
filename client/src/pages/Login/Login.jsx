@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import Logo from "../../components/logo";
 import useAuth from "../../hooks/useAuth";
@@ -8,16 +8,29 @@ import "../../styles/Register.scss";
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
-  const { login, error, message } = useAuth();
+  const { authToken, login, error, message } = useAuth();
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  useEffect(() => {
+    if (authToken) {
+      console.log("Auth token detected, navigating to /discovery...");
+      navigate("/discovery");
+    }
+  }, [authToken, navigate]);
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Login button clicked! Form data:", formData);
+
     const success = await login(formData);
-    if (success) {
-      navigate("/");
+    if (!success) {
+      console.log("Login failed. No token set or invalid credentials.");
     }
   };
 
@@ -36,6 +49,7 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email"
+                autoComplete="email"
                 required
               />
             </div>
@@ -46,6 +60,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
+                autoComplete="current-password"
                 required
               />
             </div>
@@ -53,13 +68,6 @@ const Login = () => {
               Login
             </button>
           </form>
-
-          <p className="link-text">
-            Do not have an account?{" "}
-            <Link to="/register" className="link-word">
-              Register
-            </Link>
-          </p>
 
           {error && <h3 className="error-message">{error}</h3>}
           {message && <h3 className="success-message">{message}</h3>}
