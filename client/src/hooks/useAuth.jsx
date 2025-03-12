@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 const useAuth = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const { authToken, login: contextLogin } = useContext(AuthContext);
 
   const register = async (formData) => {
     setError(null);
@@ -31,25 +33,21 @@ const useAuth = () => {
     setMessage(null);
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const success = await contextLogin(formData);
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Login failed");
-
-      localStorage.setItem("token", data.token);
-      setMessage("Login successful! Redirecting...");
-      return true;
+      if (success) {
+        setMessage("Login successful! Redirecting...");
+        return true;
+      } else {
+        throw new Error("Login failed");
+      }
     } catch (err) {
       setError(err.message || "Something went wrong.");
       return false;
     }
   };
 
-  return { register, login, error, message };
+  return { register, login, error, message, authToken };
 };
 
 export default useAuth;

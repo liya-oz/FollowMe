@@ -1,34 +1,45 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
-import { AuthContext } from "./AuthContext";
+import { AuthContext } from "./contexts/AuthContext";
 
 export const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(() =>
     localStorage.getItem("authToken"),
   );
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Sync auth state with localStorage
+  const updateToken = useCallback((token) => {
+    console.log("Updating auth token:", token);
+    if (token) {
+      localStorage.setItem("authToken", token);
+    } else {
+      localStorage.removeItem("authToken");
+    }
+    setAuthToken(token);
+  }, []);
+
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
-    if (storedToken && !authToken) {
-      console.log("Found token in localStorage:", storedToken);
-      setAuthToken(storedToken);
-    }
-  }, []); // Runs only on mount
+    updateToken(storedToken);
+    setIsLoading(false);
+  }, [updateToken]);
 
-  // Redirect when authToken updates
   useEffect(() => {
-    if (authToken) {
-      console.log("User authenticated, redirecting to /discovery...");
-      navigate("/discovery");
+    if (authToken && !isLoading) {
+      const publicPaths = ["/", "/login", "/register"];
+      if (publicPaths.includes(location.pathname)) {
+        console.log("Auth token detected, navigating to /discovery...");
+        navigate("/discovery");
+      }
     }
-  }, [authToken, navigate]);
+  }, [authToken, navigate, location.pathname, isLoading]);
 
   const login = async (credentials) => {
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
@@ -36,11 +47,10 @@ export const AuthProvider = ({ children }) => {
 
       if (!response.ok) throw new Error(`Login failed: ${response.statusText}`);
 
-      const { token } = await response.json();
-      console.log("Login successful! Received token:", token);
+      const data = await response.json();
+      console.log("Login successful! Received token:", data.token);
 
-      localStorage.setItem("authToken", token);
-      setAuthToken(token);
+      updateToken(data.token);
       return true;
     } catch (error) {
       console.error("Login error:", error);
@@ -50,13 +60,20 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     console.log("Logout initiated, clearing token...");
-    localStorage.removeItem("authToken");
-    setAuthToken(null);
+    updateToken(null);
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ authToken, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        authToken,
+        login,
+        logout,
+        isLoading,
+        setAuthToken: updateToken,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
