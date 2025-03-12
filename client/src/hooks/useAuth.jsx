@@ -23,7 +23,7 @@ const useAuth = () => {
       setMessage("Registration successful! Redirecting to login...");
       return true;
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      setError(err.message);
       return false;
     }
   };

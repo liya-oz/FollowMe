@@ -51,6 +51,7 @@
     "sass-embedded": "^1.85.1"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "concurrently": "^9.1.0",
     "cors": "^2.8.5",
     "lucide-react": "^0.477.0",
