@@ -70,7 +70,7 @@ const Navbar = () => {
           text="Settings"
           to="/settings"
         />
-        <p>FollowMe 2025. All rights reserved.</p>
+        <p className="bottom-text">FollowMe 2025. All rights reserved.</p>
       </div>
     </div>
   );

@@ -78,8 +78,9 @@
   .navbar-bottom {
     padding-top: var(--padding-medium);
 
-    p {
+    .bottom-text {
       padding: var(--padding-medium);
+      font-size: small;
     }
   }
 }
