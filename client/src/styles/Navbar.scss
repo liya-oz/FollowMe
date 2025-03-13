@@ -1,0 +1,86 @@
+@use "./global" as *;
+
+.navbar {
+  width: 250px;
+  height: 100vh;
+  background: var(--darker-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+
+  .navbar-top {
+    .logo {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      margin-bottom: var(--padding-medium);
+
+      img {
+        width: 100%;
+      }
+    }
+
+    nav {
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+    }
+  }
+
+  .navbar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1rem;
+    color: var(--black);
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: var(--darker-white);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .nav-link {
+      padding: 15px 0;
+      color: var(--black);
+      transition: color 0.3s ease;
+      display: flex;
+
+      .nav-link-icon {
+        width: 24px;
+        height: 24px;
+        margin-left: 25px;
+      }
+
+      p {
+        padding-left: 25px;
+      }
+    }
+
+    .active {
+      background: var(--white);
+      border-left: 8px solid var(--light-green);
+      width: 100%;
+    }
+  }
+
+  .navbar-bottom {
+    padding-top: var(--padding-medium);
+
+    .bottom-text {
+      padding: var(--padding-medium);
+      font-size: small;
+    }
+  }
+}
