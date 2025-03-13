@@ -3,50 +3,23 @@
 // You can customize the navigation links as needed.
 
 import { useContext } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { AuthContext } from "./contexts/AuthContext";
+import Navbar from "./components/Navbar";
+import "./styles/PrivateLayout.scss";
 
 const PrivateLayout = () => {
   const { logout } = useContext(AuthContext);
 
   return (
-    <div>
-      <header>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/discovery">Discovery</Link>
-            </li>
-            <li>
-              <Link to="/explore">Explore</Link>
-            </li>
-            <li>
-              <Link to="/my-events">My Events</Link>
-            </li>
-            <li>
-              <Link to="/my-friends">My Friends</Link>
-            </li>
-            <li>
-              <Link to="/chats">Chats</Link>
-            </li>
-            <li>
-              <Link to="/settings">Settings</Link>
-            </li>
-            <li>
-              <Link to="/user/1">Profile</Link>
-            </li>
-            <li>
-              <button onClick={logout}>Logout</button>
-            </li>
-          </ul>
-        </nav>
-      </header>
-      <main>
-        <Outlet />
-      </main>
-      <footer>
-        <p>© 2025 FollowMe</p>
-      </footer>
+    <div className="private-layout">
+      <Navbar logout={logout} />
+
+      <div className="content">
+        <main>
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-// src/App.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Public pages
@@ -17,10 +16,10 @@ import Chats from "./pages/Chats/Chats";
 import Settings from "./pages/Settings/Settings";
 import UserProfile from "./pages/UserProfile/UserProfile";
 
-// Layout for logged-in users (includes header/navbar,footer.)
+// Layout for logged-in users (includes header/navbar, footer.)
 import PrivateLayout from "./PrivateLayout";
 
-// Component that checks for authentication and renders nested routes (or redirects (to login page/or landing?))
+// Component that checks for authentication and renders nested routes
 import PrivateRoute from "./components/PrivateRoute";
 
 import "./styles/global.scss";
@@ -37,7 +36,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes only for auth.users */}
+        {/* Protected Routes only for authenticated users */}
         <Route element={<PrivateRoute />}>
           <Route element={<PrivateLayout />}>
             <Route path="/discovery" element={<DiscoveryPage />} />
@@ -52,7 +51,7 @@ const App = () => {
           </Route>
         </Route>
 
-        {/* Fallback route (redirects unknown paths to landing page or it can be 404 page) */}
+        {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </AuthProvider>
