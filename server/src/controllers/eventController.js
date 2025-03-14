@@ -3,29 +3,38 @@ import { logError } from "../util/logging.js";
 
 export const getEvents = async (req, res) => {
   try {
-    const { title, category, location, startTime, endTime } = req.query;
+    const { keyword, category, location, from, to, limit, page } = req.query;
     const filter = {};
 
-    if (title) {
-      filter.title = { $regex: title, $options: "i" };
+    if (keyword) {
+      const words = keyword.trim().split(/\s+/);
+      filter.$and = words.map((word) => ({
+        $or: [
+          { title: { $regex: word, $options: "i" } },
+          { category: { $regex: word, $options: "i" } },
+          { location: { $regex: word, $options: "i" } },
+        ],
+      }));
     }
-    if (category) {
+
+    if (category && category !== "All Category") {
       filter.category = category;
     }
+
     if (location) {
       filter.location = { $regex: location, $options: "i" };
     }
-    if (startTime || endTime) {
+
+    if (from || to) {
       filter.time = {};
-      if (startTime) {
-        filter.time.$gte = new Date(startTime);
-      }
-      if (endTime) {
-        filter.time.$lte = new Date(endTime);
-      }
+      if (from) filter.time.$gte = new Date(from);
+      if (to) filter.time.$lte = new Date(to);
     }
 
-    const events = await Event.find(filter);
+    const resultsLimit = parseInt(limit, 10) || 6;
+    const pageNumber = parseInt(page, 10) || 1;
+    const skip = (pageNumber - 1) * resultsLimit;
+    const events = await Event.find(filter).skip(skip).limit(resultsLimit);
     res.status(200).json({ success: true, result: events });
   } catch (error) {
     logError(error);
