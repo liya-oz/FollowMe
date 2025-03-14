@@ -6,8 +6,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-const EventList = ({ listName, events, searchQuery, selectedCity }) => {
-  const [selectedCategory, setSelectedCategory] = useState("All Category");
+const EventList = ({ listName, events }) => {
   const [dateRange, setDateRange] = useState({
     from: new Date().toISOString().split("T")[0],
     to: "",
@@ -25,29 +24,16 @@ const EventList = ({ listName, events, searchQuery, selectedCity }) => {
     setSelectedEvent(null);
   };
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-  };
-
   const handleDateChange = (field, value) => {
     setDateRange((prev) => ({ ...prev, [field]: value }));
   };
 
-  const query = searchQuery.toLowerCase().trim();
-
+  const fromDate = dateRange.from ? new Date(dateRange.from) : null;
+  const toDate = dateRange.to ? new Date(dateRange.to) : null;
   const filteredEvents = events.filter((event) => {
     const eventDate = new Date(event.time);
-    const fromDate = dateRange.from ? new Date(dateRange.from) : null;
-    const toDate = dateRange.to ? new Date(dateRange.to) : null;
-
     return (
-      (!query || event.title.toLowerCase().includes(query)) &&
-      (selectedCategory === "All Category" ||
-        event.category === selectedCategory) &&
-      (!fromDate || eventDate >= fromDate) &&
-      (!toDate || eventDate <= toDate) &&
-      (!selectedCity ||
-        event.location.toLowerCase() === selectedCity.toLowerCase())
+      (!fromDate || eventDate >= fromDate) && (!toDate || eventDate <= toDate)
     );
   });
 
@@ -55,39 +41,24 @@ const EventList = ({ listName, events, searchQuery, selectedCity }) => {
     <div className="event-list-container">
       <div className="event-list-header">
         <h2>{listName}</h2>
-        <div className="event-list-filter">
-          <select
-            onChange={(e) => handleCategoryChange(e.target.value)}
-            className="event-list-select"
-          >
-            <option value="All Category">All Category</option>
-            {[...new Set(events.map((event) => event.category))].map(
-              (category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ),
-            )}
-          </select>
-          <div className="event-list-date-filters">
-            <div className="event-list-filter-wrapper">
-              <p>From</p>
-              <input
-                type="date"
-                value={dateRange.from}
-                onChange={(e) => handleDateChange("from", e.target.value)}
-                className="event-list-date-input"
-              />
-            </div>
-            <div className="event-list-filter-wrapper">
-              <p>To</p>
-              <input
-                type="date"
-                value={dateRange.to}
-                onChange={(e) => handleDateChange("to", e.target.value)}
-                className="event-list-date-input"
-              />
-            </div>
+        <div className="event-list-date-filters">
+          <div className="event-list-filter-wrapper">
+            <p>From</p>
+            <input
+              type="date"
+              value={dateRange.from}
+              onChange={(e) => handleDateChange("from", e.target.value)}
+              className="event-list-date-input"
+            />
+          </div>
+          <div className="event-list-filter-wrapper">
+            <p>To</p>
+            <input
+              type="date"
+              value={dateRange.to}
+              onChange={(e) => handleDateChange("to", e.target.value)}
+              className="event-list-date-input"
+            />
           </div>
         </div>
       </div>
@@ -155,8 +126,6 @@ const EventList = ({ listName, events, searchQuery, selectedCity }) => {
 
 EventList.propTypes = {
   listName: PropTypes.string.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  selectedCity: PropTypes.string,
   events: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,

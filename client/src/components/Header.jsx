@@ -9,15 +9,17 @@ function Header({ setSearchQuery, cities, setSelectedCity }) {
   const [cityInput, setCityInput] = useState("");
   const [showCityDropdown, setShowCityDropdown] = useState(false);
 
-  const handleTitleSearch = ({ target: { value } }) => {
+  const handleTitleSearch = (e) => {
+    const value = e.target.value;
     setTitleInput(value);
     setSearchQuery(value);
   };
 
-  const handleCityInputChange = ({ target: { value } }) => {
+  const handleCityInputChange = (e) => {
+    const value = e.target.value;
     setCityInput(value);
+    setSelectedCity(value);
     if (value.trim() === "") {
-      setSelectedCity("");
       setShowCityDropdown(false);
     } else {
       setShowCityDropdown(true);
@@ -89,6 +91,8 @@ function Header({ setSearchQuery, cities, setSelectedCity }) {
 Header.propTypes = {
   setSearchQuery: PropTypes.func.isRequired,
   cities: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedCategory: PropTypes.string.isRequired,
+  setSelectedCategory: PropTypes.func.isRequired,
   setSelectedCity: PropTypes.func.isRequired,
 };
 
