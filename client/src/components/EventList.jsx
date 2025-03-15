@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import "../styles/EventList.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import { AuthContext } from "../contexts/AuthContext";
 
 const EventList = ({ listName, events }) => {
   const [dateRange, setDateRange] = useState({
@@ -13,15 +14,23 @@ const EventList = ({ listName, events }) => {
   });
   const [open, setOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [modalType, setModalType] = useState("");
+  const { authToken } = useContext(AuthContext);
 
   const handleOpen = (event) => {
     setSelectedEvent(event);
+    if (authToken) {
+      setModalType("details");
+    } else {
+      setModalType("login");
+    }
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
     setSelectedEvent(null);
+    setModalType("");
   };
 
   const handleDateChange = (field, value) => {
@@ -93,32 +102,44 @@ const EventList = ({ listName, events }) => {
           <p>No events found matching the filters.</p>
         )}
       </div>
-      {/* Modal */}
       <Modal open={open} onClose={handleClose}>
-        <Box className="event-modal">
-          <h2>Sign Up to Join Events</h2>
-          <p>
-            You need to login or register to apply for &quot;
-            {selectedEvent?.title}
-            &quot; event.
-          </p>
-          <div>
+        {modalType === "login" ? (
+          <Box className="event-modal">
+            <h2>Sign Up to Join Events</h2>
+            <p>
+              You need to login or register to view details for &quot;
+              {selectedEvent?.title}&quot;.
+            </p>
+            <div>
+              <Button
+                className="event-modal-button"
+                variant="contained"
+                onClick={() => (window.location.href = "/login")}
+              >
+                Login
+              </Button>
+              <Button
+                className="event-modal-button"
+                variant="contained"
+                onClick={() => (window.location.href = "/register")}
+              >
+                Register
+              </Button>
+            </div>
+          </Box>
+        ) : (
+          <Box className="event-modal">
+            <h2>{selectedEvent?.title}</h2>
+            <p>{selectedEvent?.description || "Event details go here."}</p>
             <Button
               className="event-modal-button"
               variant="contained"
-              onClick={() => (window.location.href = "/login")}
+              onClick={handleClose}
             >
-              Login
+              Close
             </Button>
-            <Button
-              className="event-modal-button"
-              variant="contained"
-              onClick={() => (window.location.href = "/register")}
-            >
-              Register
-            </Button>
-          </div>
-        </Box>
+          </Box>
+        )}
       </Modal>
     </div>
   );
@@ -134,6 +155,7 @@ EventList.propTypes = {
       image: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       location: PropTypes.string.isRequired,
+      description: PropTypes.string,
     }),
   ).isRequired,
 };
