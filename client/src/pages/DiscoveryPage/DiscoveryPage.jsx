@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import EventList from "../../components/EventList";
+import TopBanner from "../../components/TopBanner";
 import DiscoveryEventCreationBox from "../../components/DiscoveryEventCreationBox";
 import DiscoveryHeader from "../../components/discovery-header";
 import styles from "../../styles/DiscoveryPage.module.scss";
@@ -48,6 +49,7 @@ const DiscoveryPage = () => {
         cities={uniqueCities}
         setSelectedCity={setSelectedCity}
       />
+      <TopBanner />
       <EventList listName="Discover Events" events={events} />
       <DiscoveryEventCreationBox />
     </div>
