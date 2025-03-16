@@ -1,14 +1,23 @@
 import { useState, useEffect } from "react";
 import EventList from "../../components/EventList";
+import DiscoveryHeader from "../../components/discovery-header";
 import "../../styles/LandingPage.scss";
 
 const DiscoveryPage = () => {
   const [events, setEvents] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const params = new URLSearchParams();
+        if (searchQuery) {
+          params.append("keyword", searchQuery);
+        }
+        if (selectedCity) {
+          params.append("location", selectedCity);
+        }
         params.append("_", Date.now());
 
         const response = await fetch(`/api/events?${params.toString()}`);
@@ -25,10 +34,20 @@ const DiscoveryPage = () => {
     };
 
     fetchEvents();
-  }, []);
+  }, [searchQuery, selectedCity]);
+
+  const uniqueCities = Array.from(
+    new Set(events.map((event) => event.location)),
+  );
 
   return (
     <div className="discovery-page">
+      <DiscoveryHeader
+        setSearchQuery={setSearchQuery}
+        cities={uniqueCities}
+        setSelectedCity={setSelectedCity}
+      />
+
       <EventList listName="Discover Events" events={events} />
     </div>
   );
