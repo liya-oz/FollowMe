@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(() =>
     localStorage.getItem("authToken"),
   );
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,7 +21,40 @@ export const AuthProvider = ({ children }) => {
     }
     setAuthToken(token);
   }, []);
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!authToken) {
+        setUser(null);
+        return;
+      }
 
+      try {
+        const response = await fetch("/api/users/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 401) {
+          console.warn("Unauthorized request. Logging out...");
+          logout();
+          return;
+        }
+
+        if (!response.ok) throw new Error("Failed to fetch user profile");
+
+        const data = await response.json();
+        setUser(data.data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUser(null);
+      }
+    };
+
+    fetchUserProfile();
+  }, [authToken]);
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     updateToken(storedToken);
@@ -51,6 +85,7 @@ export const AuthProvider = ({ children }) => {
       console.log("Login successful! Received token:", data.token);
 
       updateToken(data.token);
+      setUser(data.user);
       return true;
     } catch (error) {
       console.error("Login error:", error);
@@ -61,6 +96,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     console.log("Logout initiated, clearing token...");
     updateToken(null);
+    setUser(null);
     navigate("/login");
   };
 
@@ -71,6 +107,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         isLoading,
+        user,
         setAuthToken: updateToken,
       }}
     >
