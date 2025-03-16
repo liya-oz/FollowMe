@@ -1,0 +1,89 @@
+@use "../styles/global" as *;
+
+.create-event-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--white);
+  width: 700px;
+  max-width: 90vw;
+  padding: var(--padding-medium);
+  border-radius: var(--border-radius-medium);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--outline);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.create-event-modal h2 {
+  margin-bottom: var(--padding-small);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--black);
+}
+
+.create-event-modal .MuiAlert-root {
+  margin-bottom: var(--padding-small);
+}
+
+.create-event-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-small);
+}
+
+.create-event-modal form .MuiTextField-root .MuiInputBase-root {
+  font-size: 1rem;
+  color: var(--black);
+  background: var(--white);
+  border-radius: var(--border-radius-small);
+  padding: var(--padding-small);
+}
+
+.create-event-modal form .MuiTextField-root .MuiFormLabel-root {
+  font-size: 0.9rem;
+  color: var(--black);
+}
+
+.create-event-modal form .MuiTextField-root .MuiOutlinedInput-notchedOutline {
+  border-color: var(--outline);
+}
+
+.create-event-modal
+  form
+  .MuiTextField-root:hover
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--black);
+}
+
+.create-event-modal
+  form
+  .MuiTextField-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-green);
+}
+
+.create-event-modal form .submit-button {
+  @extend .btn;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.create-event-modal form .submit-button:hover {
+  background-color: var(--primary-green-transparent);
+}
+
+@media (max-width: var(--breakpoint-tablet)) {
+  .create-event-modal {
+    width: 80vw;
+    padding: var(--padding-small);
+  }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .create-event-modal {
+    width: 95vw;
+    padding: var(--padding-small);
+  }
+}

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import EventList from "../../components/EventList";
+import DiscoveryEventCreationBox from "../../components/DiscoveryEventCreationBox";
 import DiscoveryHeader from "../../components/discovery-header";
-import "../../styles/LandingPage.scss";
+import styles from "../../styles/DiscoveryPage.module.scss";
 
 const DiscoveryPage = () => {
   const [events, setEvents] = useState([]);
@@ -41,14 +42,14 @@ const DiscoveryPage = () => {
   );
 
   return (
-    <div className="discovery-page">
+    <div className={`${styles.discoveryPage} ${styles.extraSpacing}`}>
       <DiscoveryHeader
         setSearchQuery={setSearchQuery}
         cities={uniqueCities}
         setSelectedCity={setSelectedCity}
       />
-
       <EventList listName="Discover Events" events={events} />
+      <DiscoveryEventCreationBox />
     </div>
   );
 };
