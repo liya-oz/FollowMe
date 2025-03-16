@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import EventList from "../../components/EventList";
+import DiscoveryEventCreationBox from "../../components/DiscoveryEventCreationBox";
 import "../../styles/LandingPage.scss";
 
 const DiscoveryPage = () => {
@@ -30,6 +31,7 @@ const DiscoveryPage = () => {
   return (
     <div className="discovery-page">
       <EventList listName="Discover Events" events={events} />
+      <DiscoveryEventCreationBox />
     </div>
   );
 };
