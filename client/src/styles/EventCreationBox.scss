@@ -1,6 +1,6 @@
 @use "./global" as *;
 
-$container-padding: 2rem;
+$container-padding: 1rem; // Reduced from 2rem
 $box-padding: 2rem;
 $box-border-radius: 1rem;
 $box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -15,6 +15,7 @@ $button-margin: 1.5rem auto 0;
   align-items: center;
   width: 100%;
   padding: $container-padding;
+  margin-top: 0; // Ensure there's no extra top margin
 }
 
 .event-box {
