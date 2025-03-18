@@ -14,7 +14,12 @@ import PropTypes from "prop-types";
 const NavbarItem = ({ icon, text, to }) => {
   return (
     <li className="navbar-item">
-      <NavLink to={to} className="nav-link" activeClassName="active">
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          isActive ? "nav-link active" : "nav-link"
+        }
+      >
         {icon} <p>{text}</p>
       </NavLink>
     </li>

@@ -13,7 +13,7 @@ const PrivateRoute = () => {
 
   if (!isAuthChecked) return <div>Loading authentication...</div>;
 
-  return authToken ? <Outlet /> : <Navigate to="/login" replace />;
+  return authToken ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default PrivateRoute;

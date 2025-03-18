@@ -93,12 +93,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    console.log("Logout initiated, clearing token...");
-    updateToken(null);
+  const logout = useCallback(() => {
+    localStorage.removeItem("authToken");
+    setAuthToken(null);
     setUser(null);
-    navigate("/login");
-  };
+    navigate("/");
+  }, [navigate]);
 
   return (
     <AuthContext.Provider
