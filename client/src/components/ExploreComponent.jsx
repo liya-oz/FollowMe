@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
 import "../styles/ExploreComponent.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import arrowDownIcon from "../assets/icons/arrow-down.svg";
@@ -9,6 +12,8 @@ const ExploreComponent = ({ listName, events, setFilters }) => {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [categories, setCategories] = useState(["All Categories"]);
   const [showAllEvents, setShowAllEvents] = useState(false);
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
 
   useEffect(() => {
     const uniqueCategories = [
@@ -18,8 +23,12 @@ const ExploreComponent = ({ listName, events, setFilters }) => {
     setCategories(uniqueCategories);
   }, [events]);
 
-  const handleDateChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+  const handleDateChange = (field, date) => {
+    const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
+    setFilters((prev) => ({ ...prev, [field]: formattedDate }));
+
+    if (field === "from") setFromDate(date);
+    if (field === "to") setToDate(date);
   };
 
   const handleCategoryChange = (category) => {
@@ -56,31 +65,21 @@ const ExploreComponent = ({ listName, events, setFilters }) => {
           <div className="filter-box">
             <span className="bold-text">By date</span>
             <span>From</span>
-            <img
-              src={arrowDownIcon}
-              alt="Dropdown"
-              className="arrow-icon"
-              onClick={() => document.getElementById("from-date").showPicker()}
-            />
-            <input
-              type="date"
-              id="from-date"
-              className="hidden-date-input"
-              onChange={(e) => handleDateChange("from", e.target.value)}
+            <ReactDatePicker
+              selected={fromDate}
+              onChange={(date) => handleDateChange("from", date)}
+              dateFormat="yyyy-MM-dd"
+              className="date-picker"
+              placeholderText="Select date"
             />
 
             <span>To</span>
-            <img
-              src={arrowDownIcon}
-              alt="Dropdown"
-              className="arrow-icon"
-              onClick={() => document.getElementById("to-date").showPicker()}
-            />
-            <input
-              type="date"
-              id="to-date"
-              className="hidden-date-input"
-              onChange={(e) => handleDateChange("to", e.target.value)}
+            <ReactDatePicker
+              selected={toDate}
+              onChange={(date) => handleDateChange("to", date)}
+              dateFormat="yyyy-MM-dd"
+              className="date-picker"
+              placeholderText="Select date"
             />
           </div>
         </div>
