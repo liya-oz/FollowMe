@@ -29,10 +29,8 @@ const LandingPage = () => {
         // Cache buster so each request is unique
         params.append("_", Date.now());
 
-        console.log("Fetching events with params:", params.toString());
         const response = await fetch(`/api/events?${params.toString()}`);
         const data = await response.json();
-        console.log("Fetched events data:", data);
         if (data.success) {
           setEvents(data.result);
         } else {

@@ -6,15 +6,14 @@ import arrowDownIcon from "../assets/icons/arrow-down.svg";
 import defaultUserIcon from "../assets/icons/user-icon.png";
 import logoutIcon from "../assets/icons/logout.png";
 import "../styles/discovery-header.scss";
-
+import useAuth from "../hooks/useAuth";
 function DiscoveryHeader({ setSearchQuery, cities, setSelectedCity }) {
-  const { user, logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const { logout } = useAuth();
   const [titleInput, setTitleInput] = useState("");
   const [cityInput, setCityInput] = useState("");
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  console.log("User Data:", user);
 
   const handleTitleSearch = (e) => {
     const value = e.target.value.trim();

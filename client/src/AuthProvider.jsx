@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
   const location = useLocation();
 
   const updateToken = useCallback((token) => {
-    console.log("Updating auth token:", token);
     if (token) {
       localStorage.setItem("authToken", token);
     } else {
@@ -65,7 +64,6 @@ export const AuthProvider = ({ children }) => {
     if (authToken && !isLoading) {
       const publicPaths = ["/", "/login", "/register"];
       if (publicPaths.includes(location.pathname)) {
-        console.log("Auth token detected, navigating to /discovery...");
         navigate("/discovery");
       }
     }
@@ -82,7 +80,6 @@ export const AuthProvider = ({ children }) => {
       if (!response.ok) throw new Error(`Login failed: ${response.statusText}`);
 
       const data = await response.json();
-      console.log("Login successful! Received token:", data.token);
 
       updateToken(data.token);
       setUser(data.user);
@@ -93,12 +90,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    console.log("Logout initiated, clearing token...");
-    updateToken(null);
+  const logout = useCallback(() => {
+    localStorage.removeItem("authToken");
+    setAuthToken(null);
     setUser(null);
-    navigate("/login");
-  };
+    navigate("/");
+  }, [navigate]);
 
   return (
     <AuthContext.Provider

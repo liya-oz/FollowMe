@@ -7,13 +7,12 @@ const PrivateRoute = () => {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   useEffect(() => {
-    console.log("Checking authToken in PrivateRoute:", authToken);
     setIsAuthChecked(true);
   }, [authToken]);
 
   if (!isAuthChecked) return <div>Loading authentication...</div>;
 
-  return authToken ? <Outlet /> : <Navigate to="/login" replace />;
+  return authToken ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default PrivateRoute;
