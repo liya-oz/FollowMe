@@ -15,8 +15,6 @@ function DiscoveryHeader({ setSearchQuery, cities, setSelectedCity }) {
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log("User Data:", user);
-
   const handleTitleSearch = (e) => {
     const value = e.target.value.trim();
     setTitleInput(value);

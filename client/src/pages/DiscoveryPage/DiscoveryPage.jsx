@@ -24,7 +24,6 @@ const DiscoveryPage = () => {
 
         const response = await fetch(`/api/events?${params.toString()}`);
         const data = await response.json();
-        console.log("Fetched events data:", data);
         if (data.success) {
           setEvents(data.result);
         } else {
