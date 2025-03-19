@@ -12,6 +12,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import "../styles/CreateEventModal.scss";
 import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const defaultEventData = {
   title: "",
@@ -31,6 +32,8 @@ const CreateEventModal = ({ open, onClose }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -63,6 +66,7 @@ const CreateEventModal = ({ open, onClose }) => {
           setTimeout(() => {
             setSuccess("");
             onClose();
+            navigate("/my-events");
           }, 2000);
         } else {
           setError(
@@ -76,7 +80,7 @@ const CreateEventModal = ({ open, onClose }) => {
         setIsSubmitting(false);
       }
     },
-    [eventData, onClose, authToken],
+    [eventData, onClose, authToken, navigate],
   );
 
   return (
@@ -98,7 +102,11 @@ const CreateEventModal = ({ open, onClose }) => {
         </Box>
 
         {error && <Alert severity="error">{error}</Alert>}
-        {success && <Alert severity="success">{success}</Alert>}
+        {success && (
+          <Alert severity="success" onClose={() => setSuccess("")}>
+            {success}
+          </Alert>
+        )}
 
         <form onSubmit={handleSubmit}>
           {formFields.map((field) => (

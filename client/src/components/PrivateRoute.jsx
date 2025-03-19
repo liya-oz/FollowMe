@@ -7,7 +7,6 @@ const PrivateRoute = () => {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   useEffect(() => {
-    console.log("Checking authToken in PrivateRoute:", authToken);
     setIsAuthChecked(true);
   }, [authToken]);
 
