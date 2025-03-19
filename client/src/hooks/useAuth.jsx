@@ -4,7 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 const useAuth = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const { authToken, login: contextLogin } = useContext(AuthContext);
+  const { authToken, login: contextLogin, logout } = useContext(AuthContext);
 
   const register = async (formData) => {
     setError(null);
@@ -47,7 +47,7 @@ const useAuth = () => {
     }
   };
 
-  return { register, login, error, message, authToken };
+  return { register, login, error, message, authToken, logout };
 };
 
 export default useAuth;
