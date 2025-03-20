@@ -7,6 +7,7 @@ import "../styles/ExploreComponent.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import arrowDownIcon from "../assets/icons/arrow-down.svg";
 import ExploreFooter from "./ExploreFooter";
+import EventDetailsModal from "./EventDetailsModal";
 
 const ExploreComponent = ({ listName, events, setFilters }) => {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
@@ -14,6 +15,7 @@ const ExploreComponent = ({ listName, events, setFilters }) => {
   const [showAllEvents, setShowAllEvents] = useState(false);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     const uniqueCategories = [
@@ -87,7 +89,11 @@ const ExploreComponent = ({ listName, events, setFilters }) => {
 
       <div className="event-grid">
         {(showAllEvents ? events : events.slice(0, 4)).map((event) => (
-          <div key={event._id} className="event-item">
+          <div
+            key={event._id}
+            className="event-item"
+            onClick={() => setSelectedEvent(event)}
+          >
             <div className="event-wrapper">
               <img src={event.image} alt={event.title} />
               <div className="event-date">
@@ -113,6 +119,13 @@ const ExploreComponent = ({ listName, events, setFilters }) => {
         showAllEvents={showAllEvents}
         setShowAllEvents={setShowAllEvents}
       />
+
+      {selectedEvent && (
+        <EventDetailsModal
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
     </div>
   );
 };
