@@ -1,4 +1,5 @@
 import Event from "../models/Event.js";
+import EventAttendee from "../models/EventAttendee.js";
 import { logError } from "../util/logging.js";
 
 export const getEvents = async (req, res) => {
@@ -78,6 +79,12 @@ export const createEvent = async (req, res) => {
     };
 
     const newEvent = await Event.create(eventData);
+
+    await EventAttendee.create({
+      eventId: newEvent._id,
+      userId: req.user.id,
+    });
+
     res.status(201).json({ success: true, event: newEvent });
   } catch (error) {
     logError(error);
