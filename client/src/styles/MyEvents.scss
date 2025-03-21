@@ -1,0 +1,99 @@
+@use "./global" as *;
+
+.my-events-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--padding-medium);
+  max-width: 800px;
+  margin: auto;
+
+  @include respond(phone) {
+    padding: var(--padding-small);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-green);
+    margin-bottom: var(--padding-medium);
+
+    @include respond(phone) {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.my-events-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--padding-medium);
+  background: var(--white);
+  border-radius: var(--border-radius-medium);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  margin-bottom: var(--padding-small);
+
+  @include respond(phone) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--black);
+  }
+}
+
+.my-events-actions {
+  display: flex;
+  gap: var(--padding-small);
+
+  @include respond(phone) {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+}
+
+.my-events-btn {
+  padding: var(--padding-small) var(--padding-medium);
+  border-radius: var(--border-radius-small);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  color: var(--white);
+}
+
+.my-events-btn-primary {
+  background: var(--primary-green);
+
+  &:hover {
+    background: #5a8137;
+  }
+}
+
+.my-events-btn-secondary {
+  background: var(--primary-red);
+
+  &:hover {
+    background: #cc0000;
+  }
+}
+
+.my-events-loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.my-events-error {
+  color: var(--primary-red);
+  font-weight: bold;
+  text-align: center;
+}

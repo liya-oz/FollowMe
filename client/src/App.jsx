@@ -11,6 +11,7 @@ import ExplorePage from "./pages/ExplorePage/ExplorePage";
 import MyEvents from "./pages/MyEvents/MyEvents";
 import EventDetails from "./pages/EventDetails/EventDetails";
 import CreateEvent from "./pages/CreateEvent/CreateEvent";
+import EditEvent from "./pages/EditEvent/EditEvent";
 import MyFriends from "./pages/MyFriends/MyFriends";
 import Chats from "./pages/Chats/Chats";
 import Settings from "./pages/Settings/Settings";
@@ -44,6 +45,7 @@ const App = () => {
             <Route path="/my-events" element={<MyEvents />} />
             <Route path="/event/:id" element={<EventDetails />} />
             <Route path="/create-event" element={<CreateEvent />} />
+            <Route path="/edit-event/:eventId" element={<EditEvent />} />
             <Route path="/my-friends" element={<MyFriends />} />
             <Route path="/chats" element={<Chats />} />
             <Route path="/settings" element={<Settings />} />

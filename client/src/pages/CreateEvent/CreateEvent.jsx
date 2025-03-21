@@ -4,7 +4,6 @@ import { Box, Button, TextField, Typography, Alert } from "@mui/material";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-// Default event data structure
 const defaultEventData = {
   title: "",
   description: "",
@@ -15,19 +14,14 @@ const defaultEventData = {
   image: "",
 };
 
-// Form fields to render
 const formFields = ["title", "description", "category", "location", "image"];
-
-// Required fields for validation
 const requiredFields = ["title", "description", "category", "location"];
 
-// Helper function to capitalize the first letter of a string
 const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
-// Helper function to render form fields
-const renderFormFields = (fields, eventData, handleChange, requiredFields) => {
-  return fields.map((field) => (
+const renderFormFields = (fields, eventData, handleChange, requiredFields) =>
+  fields.map((field) => (
     <TextField
       key={field}
       label={capitalizeFirstLetter(field)}
@@ -38,9 +32,12 @@ const renderFormFields = (fields, eventData, handleChange, requiredFields) => {
       margin="normal"
       fullWidth
       className="event-create-page__input"
+      sx={{
+        backgroundColor: "var(--white)",
+        borderRadius: "var(--border-radius-small)",
+      }}
     />
   ));
-};
 
 const CreateEventForm = ({ onClose }) => {
   const { authToken } = useContext(AuthContext);
@@ -49,13 +46,11 @@ const CreateEventForm = ({ onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  // Handle changes in form input
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setEventData((prevData) => ({ ...prevData, [name]: value }));
   }, []);
 
-  // Handle form submission
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
@@ -101,17 +96,33 @@ const CreateEventForm = ({ onClose }) => {
   );
 
   return (
-    <Box className="event-create-page">
+    <Box
+      className="event-create-page"
+      sx={{
+        backgroundColor: "var(--darker-white)",
+        padding: "var(--padding-medium)",
+        borderRadius: "var(--border-radius-medium)",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.05)",
+      }}
+    >
       <Typography
         variant="h5"
         component="h2"
         className="event-create-page__title"
+        sx={{ color: "var(--black)" }}
       >
         Create New Event
       </Typography>
 
       {status.error && (
-        <Alert severity="error" className="event-create-page__alert">
+        <Alert
+          severity="error"
+          className="event-create-page__alert"
+          sx={{
+            backgroundColor: "var(--secondary-red)",
+            color: "var(--white)",
+          }}
+        >
           {status.error}
         </Alert>
       )}
@@ -120,6 +131,10 @@ const CreateEventForm = ({ onClose }) => {
           severity="success"
           onClose={() => setStatus({ success: "" })}
           className="event-create-page__alert"
+          sx={{
+            backgroundColor: "var(--secondary-green)",
+            color: "var(--white)",
+          }}
         >
           {status.success}
         </Alert>
@@ -128,7 +143,6 @@ const CreateEventForm = ({ onClose }) => {
       <form onSubmit={handleSubmit} className="event-create-page__form">
         {renderFormFields(formFields, eventData, handleChange, requiredFields)}
 
-        {/* Time input */}
         <TextField
           label="Event Time"
           name="time"
@@ -140,9 +154,12 @@ const CreateEventForm = ({ onClose }) => {
           fullWidth
           InputLabelProps={{ shrink: true }}
           className="event-create-page__input"
+          sx={{
+            backgroundColor: "var(--white)",
+            borderRadius: "var(--border-radius-small)",
+          }}
         />
 
-        {/* Max participants input */}
         <TextField
           label="Max Participants"
           name="maxParticipants"
@@ -153,28 +170,44 @@ const CreateEventForm = ({ onClose }) => {
           margin="normal"
           fullWidth
           className="event-create-page__input"
+          sx={{
+            backgroundColor: "var(--white)",
+            borderRadius: "var(--border-radius-small)",
+          }}
         />
 
         <Box
-          sx={{ display: "flex", gap: 2, mt: 2 }}
+          sx={{
+            display: "flex",
+            gap: "var(--padding-small)",
+            mt: "var(--padding-medium)",
+          }}
           className="event-create-page__buttons"
         >
-          {/* Submit button */}
           <Button
             type="submit"
             fullWidth
             className="event-create-page__submit-button"
             disabled={isSubmitting}
+            sx={{
+              backgroundColor: "var(--primary-green)",
+              color: "var(--white)",
+              "&:hover": { backgroundColor: "var(--dark-black)" },
+            }}
           >
             {isSubmitting ? "Submitting..." : "Create Event"}
           </Button>
 
-          {/* Cancel button */}
           <Button
             type="button"
             fullWidth
             className="event-create-page__cancel-button"
             onClick={onClose}
+            sx={{
+              backgroundColor: "var(--primary-red)",
+              color: "var(--white)",
+              "&:hover": { backgroundColor: "var(--dark-red)" },
+            }}
           >
             Cancel
           </Button>
