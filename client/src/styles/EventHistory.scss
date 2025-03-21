@@ -1,0 +1,50 @@
+.event-history {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+
+  h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+
+    li {
+      padding: 0.75rem;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+      color: #555;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .attended,
+  .upcoming {
+    margin-bottom: 1.5rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 1rem;
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    li {
+      font-size: 0.95rem;
+      padding: 0.5rem;
+    }
+  }
+}
