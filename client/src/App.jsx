@@ -49,7 +49,11 @@ const App = () => {
             <Route path="/my-friends" element={<MyFriends />} />
             <Route path="/chats" element={<Chats />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/user/:id" element={<UserProfile />} />
+            <Route path="/user/me" element={<UserProfile editable={true} />} />
+            <Route
+              path="/user/:id"
+              element={<UserProfile editable={false} />}
+            />
           </Route>
         </Route>
 
