@@ -4,7 +4,13 @@ import { AuthContext } from "../contexts/AuthContext";
 const useAuth = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const { authToken, login: contextLogin, logout } = useContext(AuthContext);
+  const {
+    authToken,
+    login: contextLogin,
+    logout,
+    setUser,
+    user,
+  } = useContext(AuthContext);
 
   const register = async (formData) => {
     setError(null);
@@ -47,7 +53,33 @@ const useAuth = () => {
     }
   };
 
-  return { register, login, error, message, authToken, logout };
+  const updateProfile = async (profileData) => {
+    try {
+      const response = await fetch(`/api/users/${user._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(profileData),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setUser(data.data);
+        return { success: true, message: "Profile updated successfully!" };
+      } else {
+        return {
+          success: false,
+          message: data.message || "Failed to update profile.",
+        };
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      return { success: false, message: error.message };
+    }
+  };
+
+  return { register, login, updateProfile, error, message, authToken, logout };
 };
 
 export default useAuth;
