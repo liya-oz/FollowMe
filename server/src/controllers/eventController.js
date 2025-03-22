@@ -46,12 +46,18 @@ export const getEvents = async (req, res) => {
 export const getEvent = async (req, res) => {
   try {
     const eventId = req.params.id;
-    const event = await Event.findById(eventId);
+
+    const event = await Event.findById(eventId).populate(
+      "createdBy",
+      "name profilePhoto",
+    );
+
     if (!event) {
       return res
         .status(404)
         .json({ success: false, message: "Event not found" });
     }
+
     res.status(200).json({ success: true, data: event });
   } catch (error) {
     logError(error);
