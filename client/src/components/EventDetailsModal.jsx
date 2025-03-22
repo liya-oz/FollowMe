@@ -1,19 +1,74 @@
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { AuthContext } from "../contexts/AuthContext";
 import {
   MdCalendarMonth,
   MdAccessTimeFilled,
   MdLocationPin,
+  MdGroups,
 } from "react-icons/md";
+
 import "../styles/EventDetailsModal.scss";
 import userIcon from "../assets/icons/user-icon.png";
 
 const EventDetailsModal = ({ event, onClose }) => {
   const [isParticipating, setIsParticipating] = useState(false);
-  const { authToken } = useContext(AuthContext);
+  const [participated, setParticipated] = useState(false);
+  const [fullEvent, setFullEvent] = useState(null);
+  const [attendees, setAttendees] = useState([]);
+  const { authToken, user } = useContext(AuthContext);
 
-  const eventDateTime = event?.time ? new Date(event.time) : null;
+  useEffect(() => {
+    const fetchFullEvent = async () => {
+      if (!event?._id) return;
+
+      try {
+        const res = await fetch(`/api/events/${event._id}`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          setFullEvent(data.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch full event:", err);
+      }
+    };
+
+    fetchFullEvent();
+  }, [event?._id, authToken]);
+
+  useEffect(() => {
+    const fetchAttendees = async () => {
+      if (!event?._id) return;
+
+      try {
+        const res = await fetch(`/api/event-attendees?eventId=${event._id}`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        });
+
+        const data = await res.json();
+        if (res.ok && data.result) {
+          setAttendees(data.result);
+
+          const alreadyParticipated = data.result.some(
+            (att) => att.userId?._id === user?._id,
+          );
+          setParticipated(alreadyParticipated);
+        }
+      } catch (err) {
+        console.error("Error fetching attendees:", err);
+      }
+    };
+
+    fetchAttendees();
+  }, [event?._id, authToken, user?._id]);
+
+  const currentEvent = fullEvent || event;
+  if (!currentEvent) return null;
+
+  const eventDateTime = currentEvent?.time ? new Date(currentEvent.time) : null;
   const formattedDate = eventDateTime
     ? eventDateTime.toLocaleDateString("en-US", {
         year: "numeric",
@@ -31,11 +86,8 @@ const EventDetailsModal = ({ event, onClose }) => {
 
   const handleParticipate = async () => {
     if (!authToken) {
-      alert("You need to log in to participate.");
       return;
     }
-
-    if (!event || !event._id) return;
 
     setIsParticipating(true);
 
@@ -46,7 +98,7 @@ const EventDetailsModal = ({ event, onClose }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ eventId: event._id }),
+        body: JSON.stringify({ eventId: currentEvent._id }),
       });
 
       const data = await response.json();
@@ -54,15 +106,14 @@ const EventDetailsModal = ({ event, onClose }) => {
         throw new Error(data.message || "Failed to participate");
       }
 
-      alert("Successfully registered for the event! ✅");
+      setParticipated(true);
+      setAttendees((prev) => [...prev, { userId: user }]);
     } catch (error) {
       alert(error.message || "Error registering for the event.");
     } finally {
       setIsParticipating(false);
     }
   };
-
-  if (!event) return null;
 
   return (
     <div className="modal-overlay">
@@ -71,14 +122,19 @@ const EventDetailsModal = ({ event, onClose }) => {
           <button className="go-back-button" onClick={onClose}>
             &larr; Go Back
           </button>
-          <img src={event.image} alt={event.title} className="modal-image" />
+          <img
+            src={currentEvent.image}
+            alt={currentEvent.title}
+            className="modal-image"
+          />
           <div className="event-creator">
             <span className="creator-name">
-              {event.createdBy?.name || "Unknown"}
+              by {currentEvent.createdBy?.name || "Unknown"}
             </span>
+
             <img
-              src={event.createdBy?.profileImage || userIcon}
-              alt={event.createdBy?.name || "Unknown Creator"}
+              src={currentEvent.createdBy?.profilePhoto || userIcon}
+              alt={currentEvent.createdBy?.name || "Unknown Creator"}
               className="creator-image"
             />
           </div>
@@ -86,14 +142,25 @@ const EventDetailsModal = ({ event, onClose }) => {
 
         <div className="modal-middle">
           <div className="event-info">
-            <h2>{event.title}</h2>
-            <p className="event-description">{event.description}</p>
+            <h2>{currentEvent.title}</h2>
+            <p className="event-description">{currentEvent.description}</p>
           </div>
-          <div className="event-attendees">
-            <img src={userIcon} alt="Attendee" className="attendee-image" />
-            <img src={userIcon} alt="Attendee" className="attendee-image" />
-            <img src={userIcon} alt="Attendee" className="attendee-image" />
-            <img src={userIcon} alt="Attendee" className="attendee-image" />
+
+          <div className="attendees-wrapper">
+            <div className="attendees-label">
+              <MdGroups className="attendees-icon" />
+              <span>Attendees</span>
+            </div>
+            <div className="event-attendees">
+              {attendees.map((attendee, index) => (
+                <img
+                  key={index}
+                  src={attendee.userId?.profilePhoto || userIcon}
+                  alt={attendee.userId?.name || "Attendee"}
+                  className="attendee-image"
+                />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -109,15 +176,19 @@ const EventDetailsModal = ({ event, onClose }) => {
             </div>
             <div>
               <MdLocationPin className="event-icon" />
-              <span>{event.location}</span>
+              <span>{currentEvent.location}</span>
             </div>
           </div>
           <button
             className="participate-button"
             onClick={handleParticipate}
-            disabled={isParticipating}
+            disabled={isParticipating || participated}
           >
-            {isParticipating ? "Processing..." : "Participate"}
+            {participated
+              ? "Participated"
+              : isParticipating
+                ? "Processing..."
+                : "Participate"}
           </button>
         </div>
       </div>
@@ -133,7 +204,7 @@ EventDetailsModal.propTypes = {
     description: PropTypes.string,
     createdBy: PropTypes.shape({
       name: PropTypes.string,
-      profileImage: PropTypes.string,
+      profilePhoto: PropTypes.string,
     }),
     time: PropTypes.string,
     location: PropTypes.string,
