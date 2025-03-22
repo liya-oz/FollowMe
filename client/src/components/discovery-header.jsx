@@ -89,7 +89,7 @@ function DiscoveryHeader({ setSearchQuery, cities, setSelectedCity }) {
               <img
                 src={user.profilePhoto}
                 alt="User Avatar"
-                className="profile-img"
+                className="profile-image"
               />
             ) : (
               <img
