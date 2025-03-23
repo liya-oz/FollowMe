@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import { AuthContext } from "./contexts/AuthContext";
 import Navbar from "./components/Navbar";
 import "./styles/PrivateLayout.scss";
 
