@@ -4,13 +4,8 @@ import { AuthContext } from "../contexts/AuthContext";
 const useAuth = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const {
-    authToken,
-    login: contextLogin,
-    logout,
-    setUser,
-    user,
-  } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
+  const { authToken, login: contextLogin, logout } = useContext(AuthContext);
 
   const register = async (formData) => {
     setError(null);
@@ -55,7 +50,10 @@ const useAuth = () => {
 
   const updateProfile = async (profileData) => {
     try {
-      const response = await fetch(`/api/users/${user._id}`, {
+      const id = profileData._id || (user ? user._id : null);
+      if (!id) throw new Error("User ID is missing.");
+
+      const response = await fetch(`/api/users/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -65,6 +63,7 @@ const useAuth = () => {
       });
       const data = await response.json();
       if (data.success) {
+        // Optionally, update the user in context if needed:
         setUser(data.data);
         return { success: true, message: "Profile updated successfully!" };
       } else {
