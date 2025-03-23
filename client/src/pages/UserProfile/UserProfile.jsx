@@ -22,8 +22,10 @@ const UserProfile = ({ profileId, editable = false }) => {
   const { updateProfile } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
-    bio: "",
     interests: "",
+    age: "",
+    location: "",
+    about: "",
     profilePhoto: "",
     isPublic: true,
   });
@@ -46,8 +48,10 @@ const UserProfile = ({ profileId, editable = false }) => {
           setFormData({
             _id: data.data._id,
             name: data.data.name || "",
-            bio: data.data.bio || "",
             interests: data.data.interests || "",
+            age: data.data.age || "",
+            location: data.data.location || "",
+            about: data.data.about || data.data.bio || "",
             profilePhoto: data.data.profilePhoto || "",
             isPublic:
               typeof data.data.isPublic === "boolean"
@@ -57,8 +61,10 @@ const UserProfile = ({ profileId, editable = false }) => {
           if (editable) {
             setEditModes({
               name: !data.data.name,
-              bio: !data.data.bio,
               interests: !data.data.interests,
+              age: !data.data.age,
+              location: !data.data.location,
+              about: !(data.data.about || data.data.bio),
               profilePhoto: !data.data.profilePhoto,
             });
           }
@@ -95,13 +101,17 @@ const UserProfile = ({ profileId, editable = false }) => {
       if (result.success) {
         setEditModes({
           name: false,
-          bio: false,
           interests: false,
+          age: false,
+          location: false,
+          about: false,
           profilePhoto: false,
         });
       }
     }
   };
+
+  const formFields = ["interests", "age", "location", "about", "profilePhoto"];
 
   return (
     <Container className="user-profile-container">
@@ -114,13 +124,35 @@ const UserProfile = ({ profileId, editable = false }) => {
           />
         </div>
         <div className="user-profile-details">
-          <Typography
-            className="user-profile-title"
-            variant="h4"
-            component="h1"
-          >
-            {formData.name || "User Profile"}
-          </Typography>
+          <Box className="field-row name-field">
+            {editModes.name ? (
+              <TextField
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                variant="standard"
+                fullWidth
+                className="profile-input"
+              />
+            ) : (
+              <Typography
+                className="user-profile-title"
+                variant="h4"
+                component="h1"
+              >
+                {formData.name || "Name"}
+              </Typography>
+            )}
+            {editable && (
+              <IconButton
+                onClick={() => toggleEditMode("name")}
+                className="edit-icon-button"
+              >
+                <FaPenToSquare />
+              </IconButton>
+            )}
+          </Box>
 
           {message && (
             <Alert className="user-profile-alert" severity="info">
@@ -134,15 +166,24 @@ const UserProfile = ({ profileId, editable = false }) => {
               onSubmit={handleSubmit}
               className="user-profile-form"
             >
-              {["name", "bio", "interests", "profilePhoto"].map((field) => (
-                <Box key={field} className="field-row">
+              {formFields.map((field) => (
+                <Box
+                  key={field}
+                  className="field-row"
+                  sx={{ alignItems: "center" }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ marginRight: "1rem", minWidth: "80px" }}
+                  >
+                    {field.charAt(0).toUpperCase() + field.slice(1)}:
+                  </Typography>
                   {!editModes[field] && formData[field] !== "" ? (
                     <Typography variant="body1" className="display-text">
                       {formData[field]}
                     </Typography>
                   ) : (
                     <TextField
-                      label={field.charAt(0).toUpperCase() + field.slice(1)}
                       name={field}
                       value={formData[field]}
                       onChange={handleChange}
@@ -152,7 +193,7 @@ const UserProfile = ({ profileId, editable = false }) => {
                           ? "Enter image URL"
                           : `Enter your ${field}`
                       }
-                      multiline={field === "bio"}
+                      multiline={field === "about"}
                       variant="standard"
                       className="profile-input"
                     />
@@ -187,13 +228,15 @@ const UserProfile = ({ profileId, editable = false }) => {
             </Box>
           ) : (
             <Box className="user-profile-form">
-              {["name", "bio", "interests"].map((field) => (
-                <Box key={field} className="field-row">
-                  <Typography variant="body1" className="display-text">
-                    {formData[field] || "Not provided"}
-                  </Typography>
-                </Box>
-              ))}
+              {["name", "interests", "age", "location", "about"].map(
+                (field) => (
+                  <Box key={field} className="field-row">
+                    <Typography variant="body1" className="display-text">
+                      {formData[field] || "Not provided"}
+                    </Typography>
+                  </Box>
+                ),
+              )}
               <FormControlLabel
                 control={
                   <Checkbox
@@ -212,19 +255,13 @@ const UserProfile = ({ profileId, editable = false }) => {
 
       {editable && (
         <Box className="event-history-container">
-          <Typography
-            className="event-history-title"
-            variant="h5"
-            component="h2"
-          >
-            Event History
-          </Typography>
           <EventHistory userId={formData._id} />
         </Box>
       )}
     </Container>
   );
 };
+
 UserProfile.propTypes = {
   profileId: PropTypes.string,
   editable: PropTypes.bool,
