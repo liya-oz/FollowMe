@@ -39,7 +39,7 @@ const Navbar = () => {
         <div className="logo">
           <img src="/logo.png" alt="FollowMe Logo" />
         </div>
-        <nav>
+        <nav className="navbar-nav">
           <ul>
             <NavbarItem
               icon={<FaHome className="nav-link-icon" />}

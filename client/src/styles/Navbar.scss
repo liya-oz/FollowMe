@@ -1,19 +1,24 @@
 @use "./global" as *;
 
 .navbar {
-  width: 250px;
+  position: fixed;
+  left: 0;
   height: 100vh;
+  z-index: 1000;
   background: var(--darker-white);
+  width: 17rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0;
+  padding: 1rem 0;
 
   .navbar-top {
+    padding: 1rem 0;
+
     .logo {
       display: flex;
-      justify-content: flex-start;
-      gap: 10px;
+      justify-content: center;
+      align-items: center;
       margin-bottom: var(--padding-medium);
 
       img {
@@ -25,6 +30,7 @@
       ul {
         list-style: none;
         padding: 0;
+        margin: 0;
       }
     }
   }
@@ -76,7 +82,7 @@
   }
 
   .navbar-bottom {
-    padding-top: var(--padding-medium);
+    padding: 1rem 0;
 
     .bottom-text {
       padding: var(--padding-medium);

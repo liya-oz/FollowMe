@@ -5,6 +5,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import arrowDownIcon from "../assets/icons/arrow-down.svg";
 import defaultUserIcon from "../assets/icons/user-icon.png";
 import logoutIcon from "../assets/icons/logout.png";
+import { Link } from "react-router-dom";
 import "../styles/discovery-header.scss";
 import useAuth from "../hooks/useAuth";
 function DiscoveryHeader({ setSearchQuery, cities, setSelectedCity }) {
@@ -113,6 +114,9 @@ function DiscoveryHeader({ setSearchQuery, cities, setSelectedCity }) {
 
             <div className={`dropdown-content ${isOpen ? "show" : ""}`}>
               <p className="user-email">{user.email || "No Email"}</p>
+              <Link to={`/user/me`}>
+                <p className="user-email">Edit Profile</p>
+              </Link>
               <button className="logout-button" onClick={logout}>
                 <img
                   src={logoutIcon}
