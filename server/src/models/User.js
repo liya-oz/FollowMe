@@ -4,11 +4,14 @@ import validateAllowedFields from "../util/validateAllowedFields.js";
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    bio: { type: String, default: "" },
+    interests: { type: String, default: "" },
+    profilePhoto: { type: String, default: "" },
+    age: { type: Number }, // New field added for age
+    location: { type: String, default: "" }, // New field added for location
+    isPublic: { type: Boolean, default: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    profilePhoto: { type: String, default: "" },
-    location: { type: String, default: "" },
-    contacts: { type: Array, default: [] },
   },
   { timestamps: true },
 );

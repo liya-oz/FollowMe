@@ -1,20 +1,20 @@
 import User from "../models/User.js";
+import EventAttendee from "../models/EventAttendee.js";
 
 export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
-
     if (!user) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
-
     res.status(200).json({ success: true, data: user });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 export const getProfile = async (req, res) => {
   const userId = req.params.id;
 
@@ -71,6 +71,64 @@ export const deleteProfile = async (req, res) => {
     res
       .status(200)
       .json({ success: true, message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getUserEvents = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Not authorized" });
+    }
+
+    const requestedUserId = req.params.id;
+    if (req.user.id !== requestedUserId) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not authorized" });
+    }
+
+    const registrations = await EventAttendee.find({
+      userId: requestedUserId,
+    }).populate("eventId");
+    const events = registrations.map((reg) => reg.eventId);
+    const pastEvents = events.filter(
+      (event) => new Date(event.time) < new Date(),
+    );
+
+    res.status(200).json({ success: true, result: pastEvents });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getUserUpcomingEvents = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Not authorized" });
+    }
+
+    const requestedUserId = req.params.id;
+    if (req.user.id !== requestedUserId) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not authorized" });
+    }
+
+    const registrations = await EventAttendee.find({
+      userId: requestedUserId,
+    }).populate("eventId");
+    const events = registrations.map((reg) => reg.eventId);
+    const upcomingEvents = events.filter(
+      (event) => new Date(event.time) > new Date(),
+    );
+
+    res.status(200).json({ success: true, result: upcomingEvents });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
