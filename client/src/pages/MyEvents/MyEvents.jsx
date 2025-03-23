@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMyEvents } from "../../api/eventAttendee";
+import { AuthContext } from "../../contexts/AuthContext";
 import "../../styles/MyEvents.scss";
 
 const MyEvents = () => {
+  const { user, authToken } = useContext(AuthContext);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
       const myEvents = await getMyEvents();
       setEvents(Array.isArray(myEvents) ? myEvents : []);
@@ -20,17 +22,18 @@ const MyEvents = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [fetchEvents]);
 
   const handleEditEvent = (eventId) => {
     navigate(`/edit-event/${eventId}`);
   };
 
   const handleDeleteEvent = async (eventId) => {
+    // Optimistically update the UI by filtering out the deleted event.
     setEvents((prevEvents) =>
       prevEvents.filter((event) => event && event._id !== eventId),
     );
@@ -39,19 +42,51 @@ const MyEvents = () => {
       const response = await fetch(`/api/events/${eventId}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${authToken || ""}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete event");
+        const responseText = await response.text();
+        console.error("DELETE response error:", responseText);
+        throw new Error(`Failed to delete event: ${responseText}`);
       }
 
+      // Refresh events after deletion.
       await fetchEvents();
     } catch (err) {
       console.error("Delete Event Error:", err);
       setError("Failed to delete event. Please try again.");
     }
+  };
+
+  const renderEventItem = (event) => {
+    const isOwner = user && event.createdBy === user._id;
+
+    return (
+      <div key={event._id} className="my-events-item">
+        <h3>
+          {event.title || "Untitled Event"}{" "}
+          {isOwner && <span className="creator-label">Created by you</span>}
+        </h3>
+        {isOwner && (
+          <div className="my-events-actions">
+            <button
+              className="my-events-btn my-events-btn-primary"
+              onClick={() => handleEditEvent(event._id)}
+            >
+              Edit
+            </button>
+            <button
+              className="my-events-btn my-events-btn-secondary"
+              onClick={() => handleDeleteEvent(event._id)}
+            >
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
+    );
   };
 
   if (loading) {
@@ -72,25 +107,7 @@ const MyEvents = () => {
       {Array.isArray(events) && events.length > 0 ? (
         events
           .filter((event) => event && event._id && event.title)
-          .map((event) => (
-            <div key={event._id} className="my-events-item">
-              <h3>{event.title || "Untitled Event"}</h3>
-              <div className="my-events-actions">
-                <button
-                  className="my-events-btn my-events-btn-primary"
-                  onClick={() => handleEditEvent(event._id)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="my-events-btn my-events-btn-secondary"
-                  onClick={() => handleDeleteEvent(event._id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))
+          .map(renderEventItem)
       ) : (
         <p>No events found.</p>
       )}
