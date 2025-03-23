@@ -33,7 +33,6 @@ const MyEvents = () => {
   };
 
   const handleDeleteEvent = async (eventId) => {
-    // Optimistically update the UI by filtering out the deleted event.
     setEvents((prevEvents) =>
       prevEvents.filter((event) => event && event._id !== eventId),
     );
@@ -52,7 +51,6 @@ const MyEvents = () => {
         throw new Error(`Failed to delete event: ${responseText}`);
       }
 
-      // Refresh events after deletion.
       await fetchEvents();
     } catch (err) {
       console.error("Delete Event Error:", err);

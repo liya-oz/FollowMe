@@ -1,18 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  CircularProgress,
-  Alert,
-} from "@mui/material";
+import { Box, TextField, Button, CircularProgress, Alert } from "@mui/material";
 import axios from "axios";
 
-const EditEvent = () => {
+const EditEventForm = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
+
   const [eventData, setEventData] = useState({
     title: "",
     description: "",
@@ -96,10 +90,7 @@ const EditEvent = () => {
   }
 
   return (
-    <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Edit Event
-      </Typography>
+    <>
       {error && <Alert severity="error">{error}</Alert>}
       {success && <Alert severity="success">{success}</Alert>}
       <form onSubmit={handleSubmit}>
@@ -111,6 +102,10 @@ const EditEvent = () => {
           fullWidth
           margin="normal"
           required
+          sx={{
+            background: "var(--darker-white)",
+            borderRadius: "var(--border-radius-small)",
+          }}
         />
         <TextField
           label="Description"
@@ -122,6 +117,10 @@ const EditEvent = () => {
           fullWidth
           margin="normal"
           required
+          sx={{
+            background: "var(--darker-white)",
+            borderRadius: "var(--border-radius-small)",
+          }}
         />
         <TextField
           label="Category"
@@ -131,6 +130,10 @@ const EditEvent = () => {
           fullWidth
           margin="normal"
           required
+          sx={{
+            background: "var(--darker-white)",
+            borderRadius: "var(--border-radius-small)",
+          }}
         />
         <TextField
           label="Location"
@@ -140,6 +143,10 @@ const EditEvent = () => {
           fullWidth
           margin="normal"
           required
+          sx={{
+            background: "var(--darker-white)",
+            borderRadius: "var(--border-radius-small)",
+          }}
         />
         <TextField
           label="Event Time"
@@ -151,6 +158,10 @@ const EditEvent = () => {
           margin="normal"
           required
           InputLabelProps={{ shrink: true }}
+          sx={{
+            background: "var(--darker-white)",
+            borderRadius: "var(--border-radius-small)",
+          }}
         />
         <TextField
           label="Max Participants"
@@ -161,6 +172,10 @@ const EditEvent = () => {
           fullWidth
           margin="normal"
           required
+          sx={{
+            background: "var(--darker-white)",
+            borderRadius: "var(--border-radius-small)",
+          }}
         />
         <TextField
           label="Image URL"
@@ -169,18 +184,45 @@ const EditEvent = () => {
           onChange={handleChange}
           fullWidth
           margin="normal"
+          sx={{
+            background: "var(--darker-white)",
+            borderRadius: "var(--border-radius-small)",
+          }}
         />
-        <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-          <Button type="submit" variant="contained">
+        <Box
+          sx={{
+            display: "flex",
+            gap: "var(--padding-small)",
+            mt: "var(--padding-medium)",
+          }}
+        >
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              background: "var(--primary-green)",
+              color: "var(--white)",
+              "&:hover": { background: "var(--secondary-green)" },
+            }}
+          >
             Save Changes
           </Button>
-          <Button variant="contained" color="error" onClick={handleDelete}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDelete}
+            sx={{
+              background: "var(--primary-red)",
+              color: "var(--white)",
+              "&:hover": { background: "var(--dark-red)" },
+            }}
+          >
             Delete Event
           </Button>
         </Box>
       </form>
-    </Box>
+    </>
   );
 };
 
-export default EditEvent;
+export default EditEventForm;
