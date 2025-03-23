@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Paper,
@@ -12,7 +13,7 @@ import {
   Alert,
   Avatar,
 } from "@mui/material";
-import { FaPenToSquare } from "react-icons/fa6";
+import { FaPenToSquare, FaArrowLeft } from "react-icons/fa6";
 import useAuth from "../../hooks/useAuth";
 import EventHistory from "../../components/EventHistory";
 import "../../styles/UserProfile.scss";
@@ -20,6 +21,8 @@ import PropTypes from "prop-types";
 
 const UserProfile = ({ profileId, editable = false }) => {
   const { updateProfile } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     interests: "",
@@ -115,6 +118,15 @@ const UserProfile = ({ profileId, editable = false }) => {
 
   return (
     <Container className="user-profile-container">
+      <Box className="back-button" onClick={() => navigate(-1)}>
+        <IconButton aria-label="go back">
+          <FaArrowLeft size={20} />
+        </IconButton>
+        <Typography variant="button" className="back-text">
+          Go Back
+        </Typography>
+      </Box>
+
       <Paper className="user-profile-card">
         <div className="user-profile-avatar-container">
           <Avatar
