@@ -82,6 +82,8 @@
 
 .edit-icon-button {
   padding: 0.5rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .public-profile-label {
@@ -106,4 +108,58 @@
   font-weight: bold;
   margin-bottom: 1rem;
   color: var(--dark-black);
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  background: var(--darker-white);
+  border-radius: var(--border-radius-medium);
+  width: fit-content;
+
+  .back-text {
+    text-transform: capitalize;
+    font-weight: bold;
+  }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+  .go-back-text {
+    display: block;
+  }
+
+  .user-profile-container {
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .user-profile-card {
+    flex-direction: column;
+    gap: var(--padding-small);
+    padding: var(--padding-small);
+  }
+  .user-profile-avatar-container {
+    .MuiAvatar-root {
+      width: 8rem;
+      height: 8rem;
+    }
+  }
+  .user-profile-avatar {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto var(--padding-small);
+  }
+  .user-profile-details {
+    gap: var(--padding-small);
+    font-size: 0.9rem;
+  }
+  .user-profile-form {
+    gap: var(--padding-small);
+  }
+  .field-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
