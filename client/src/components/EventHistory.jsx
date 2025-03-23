@@ -49,6 +49,11 @@ const EventHistory = ({ userId }) => {
         <ul>
           {attendedEvents.map((event) => (
             <li key={event._id}>
+              <img
+                src={event.image}
+                alt={event.title}
+                className="event-photo"
+              />
               {event.title} - {new Date(event.time).toLocaleDateString()}
             </li>
           ))}
@@ -62,6 +67,13 @@ const EventHistory = ({ userId }) => {
         <ul>
           {upcomingEvents.map((event) => (
             <li key={event._id}>
+              {event.image && (
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="event-photo"
+                />
+              )}{" "}
               {event.title} - {new Date(event.time).toLocaleDateString()}
             </li>
           ))}
