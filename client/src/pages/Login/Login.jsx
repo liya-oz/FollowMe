@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import Logo from "../../components/logo";
 import useAuth from "../../hooks/useAuth";
+import { connectSocket } from "../../socket";
 import "../../styles/Register.scss";
 
 const Login = () => {
@@ -14,6 +15,7 @@ const Login = () => {
     if (authToken) {
       console.log("Auth token detected, navigating to /discovery...");
       navigate("/discovery");
+      connectSocket(authToken);
     }
   }, [authToken, navigate]);
 
