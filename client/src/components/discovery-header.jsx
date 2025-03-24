@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { FaSearch, FaMapMarkerAlt } from "react-icons/fa";
 import { AuthContext } from "../contexts/AuthContext";
@@ -15,6 +15,20 @@ function DiscoveryHeader({ setSearchQuery, cities, setSelectedCity }) {
   const [cityInput, setCityInput] = useState("");
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef();
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleTitleSearch = (e) => {
     const value = e.target.value.trim();
@@ -84,7 +98,7 @@ function DiscoveryHeader({ setSearchQuery, cities, setSelectedCity }) {
       </div>
 
       {user && (
-        <div className="account-box">
+        <div className="account-box" ref={dropdownRef}>
           <div className="profile-circle">
             {user.profilePhoto ? (
               <img
