@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import PropTypes from "prop-types";
 import { AuthContext } from "../contexts/AuthContext";
 import {
@@ -17,7 +17,20 @@ const EventDetailsModal = ({ event, onClose }) => {
   const [fullEvent, setFullEvent] = useState(null);
   const [attendees, setAttendees] = useState([]);
   const { authToken, user } = useContext(AuthContext);
+  const modalRef = useRef();
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
   useEffect(() => {
     const fetchFullEvent = async () => {
       if (!event?._id) return;
@@ -117,7 +130,7 @@ const EventDetailsModal = ({ event, onClose }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="modal-content" ref={modalRef}>
         <div className="modal-top">
           <button className="go-back-button" onClick={onClose}>
             &larr; Go Back
