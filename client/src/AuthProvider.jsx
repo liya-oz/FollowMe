@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }) => {
 
         if (response.status === 401) {
           console.warn("Unauthorized request. Logging out...");
+          socket.disconnect();
           logout();
           return;
         }
@@ -94,6 +95,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = useCallback(() => {
+    socket.disconnect();
     localStorage.removeItem("authToken");
     setAuthToken(null);
     setUser(null);
