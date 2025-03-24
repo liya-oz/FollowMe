@@ -6,6 +6,7 @@ import {
   FaPlus,
   FaUserFriends,
   FaCog,
+  FaComments,
 } from "react-icons/fa";
 import "../styles/Navbar.scss";
 
@@ -65,6 +66,11 @@ const Navbar = () => {
               icon={<FaUserFriends className="nav-link-icon" />}
               text="My Friends"
               to="/my-friends"
+            />
+            <NavbarItem
+              icon={<FaComments className="nav-link-icon" />}
+              text="Chats"
+              to="/chats"
             />
           </ul>
         </nav>

@@ -1,5 +1,5 @@
 const Chats = () => {
-  return <div>ChChatsats Page</div>;
+  return <div>Chats Page</div>;
 };
 
 export default Chats;

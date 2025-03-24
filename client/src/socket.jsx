@@ -7,7 +7,7 @@ export const connectSocket = (token) => {
   socket.connect();
 
   socket.on("connect", () => {
-    console.log("✅ Socket connected! ID:", socket.id);
+    console.log("Socket connected! ID:", socket.id);
 
     socket.emit("message", "hello world");
   });
