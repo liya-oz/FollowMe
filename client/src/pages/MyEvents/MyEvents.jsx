@@ -60,13 +60,30 @@ const MyEvents = () => {
 
   const renderEventItem = (event) => {
     const isOwner = user && event.createdBy === user._id;
+    const eventDate = new Date(event.time).toLocaleString();
 
     return (
       <div key={event._id} className="my-events-item">
-        <h3>
-          {event.title || "Untitled Event"}{" "}
-          {isOwner && <span className="creator-label">Created by you</span>}
-        </h3>
+        {event.image && (
+          <img
+            src={event.image}
+            alt={event.title}
+            className="my-events-image"
+          />
+        )}
+        <div className="my-events-details">
+          <h3>
+            {event.title || "Untitled Event"}{" "}
+            {isOwner && <span className="creator-label">Created by you</span>}
+          </h3>
+          <p>
+            <strong>Location:</strong> {event.location || "N/A"}
+          </p>
+          <p>
+            <strong>Date:</strong> {eventDate}
+          </p>
+        </div>
+
         {isOwner && (
           <div className="my-events-actions">
             <button
