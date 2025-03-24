@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { AuthContext } from "./contexts/AuthContext";
+import socket from "./socket";
 
 export const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(() =>
@@ -83,6 +84,8 @@ export const AuthProvider = ({ children }) => {
 
       updateToken(data.token);
       setUser(data.user);
+      socket.auth = { token: data.token };
+      socket.connect();
       return true;
     } catch (error) {
       console.error("Login error:", error);
