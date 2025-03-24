@@ -6,7 +6,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { AuthContext } from "../contexts/AuthContext";
-
+import EventDetailsModal from "./EventDetailsModal";
 const EventList = ({ listName, events }) => {
   const [dateRange, setDateRange] = useState({
     from: new Date().toISOString().split("T")[0],
@@ -102,45 +102,39 @@ const EventList = ({ listName, events }) => {
           <p>No events found matching the filters.</p>
         )}
       </div>
-      <Modal open={open} onClose={handleClose}>
-        {modalType === "login" ? (
-          <Box className="event-modal">
-            <h2>Sign Up to Join Events</h2>
-            <p>
-              You need to login or register to view details for &quot;
-              {selectedEvent?.title}&quot;.
-            </p>
-            <div>
-              <Button
-                className="event-modal-button"
-                variant="contained"
-                onClick={() => (window.location.href = "/login")}
-              >
-                Login
-              </Button>
-              <Button
-                className="event-modal-button"
-                variant="contained"
-                onClick={() => (window.location.href = "/register")}
-              >
-                Register
-              </Button>
-            </div>
-          </Box>
-        ) : (
-          <Box className="event-modal">
-            <h2>{selectedEvent?.title}</h2>
-            <p>{selectedEvent?.description || "Event details go here."}</p>
-            <Button
-              className="event-modal-button"
-              variant="contained"
-              onClick={handleClose}
-            >
-              Close
-            </Button>
-          </Box>
-        )}
-      </Modal>
+     <Modal open={open} onClose={handleClose}   >
+  <>
+    {modalType === "login" ? (
+      <Box className="event-modal">
+        <h2>Sign Up to Join Events</h2>
+        <p>
+          You need to login or register to view details for &quot;
+          {selectedEvent?.title}&quot;.
+        </p>
+        <div>
+          <Button
+            className="event-modal-button"
+            variant="contained"
+            onClick={() => (window.location.href = "/login")}
+          >
+            Login
+          </Button>
+          <Button
+            className="event-modal-button"
+            variant="contained"
+            onClick={() => (window.location.href = "/register")}
+          >
+            Register
+          </Button>
+        </div>
+      </Box>
+    ) : (
+      selectedEvent && (
+        <EventDetailsModal event={selectedEvent} onClose={handleClose} />
+      )
+    )}
+  </>
+</Modal>
     </div>
   );
 };
