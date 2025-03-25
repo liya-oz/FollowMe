@@ -1,0 +1,90 @@
+.friends-list-container {
+  padding: 2rem;
+}
+
+.friends-list-header {
+  .MuiTypography-root {
+    font-weight: bold;
+  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.sorting-filters {
+  display: flex;
+  gap: 1rem;
+}
+
+.sort-select,
+.filter-select {
+  min-width: 150px;
+}
+
+.friends-list-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.friend-card {
+  display: flex;
+  align-items: center;
+  background: var(--darker-white);
+  padding: 1rem;
+  border-radius: var(--border-radius-medium);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.friend-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.friend-info {
+  flex: 1;
+}
+
+.friend-info-container {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--border-radius-small);
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.friend-name {
+  font-weight: bold;
+}
+
+.friend-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-more-container {
+  margin-top: 2rem;
+  text-align: center;
+
+  .view-more-button {
+    background-color: var(--darker-white);
+    color: var(--primary-green);
+    padding: 10px 20px;
+    border-radius: var(--border-radius-medium);
+    font-weight: 500;
+
+    &:hover {
+      background-color: var(--light-green);
+    }
+  }
+}
