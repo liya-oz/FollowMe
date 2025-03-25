@@ -1,34 +1,47 @@
+import jwt from "jsonwebtoken";
 export default function initSocketHandlers(io) {
-  io.on("connection", (socket) => {
-    console.log("New user connected:", socket.id);
+  // JWT authentication middleware
+  io.use((socket, next) => {
+    const token = socket.handshake.auth.token;
+    if (!token) {
+      console.log("No token provided");
+      return next(new Error("Authentication error"));
+    }
 
-    socket.on("message", (data) => {
-      console.log("Simple roadcast message:", data);
-      socket.broadcast.emit("message", data);
-    });
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      socket.userId = decoded.id;
+      next();
+    } catch (err) {
+      console.log("Invalid token:", err.message);
+      return next(new Error("Authentication error"));
+    }
+  });
+
+  // Socket connection handler
+  io.on("connection", (socket) => {
+    console.log("New user connected:", socket.id, "User ID:", socket.userId);
 
     socket.on("private_message", ({ to, content }) => {
       const message = {
-        from: socket.id, // 👈 Здесь можно заменить socket.id на socket.userId, если ты позже добавишь авторизацию
+        from: socket.userId,
         to,
         content,
       };
 
       console.log("Private message:", message);
 
-      io.to(to).emit("private_message", message);
-
+      io.to(`user:${to}`).emit("private_message", message);
       socket.emit("private_message", message);
     });
 
-    // Пример будущей поддержки комнат (можно подключить позже)
     socket.on("join_room", (userId) => {
       socket.join(`user:${userId}`);
-      console.log(`User ${userId} connected to room user:${userId}`);
+      console.log(`User ${userId} joined room user:${userId}`);
     });
 
     socket.on("disconnect", () => {
-      console.log("USer was disconected:", socket.id);
+      console.log("User disconnected:", socket.id);
     });
   });
 }
