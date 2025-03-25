@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import DiscoveryHeader from "../../components/discovery-header";
-import ExploreComponent from "../../components/ExploreComponent";
-import "../../styles/ExploreComponent.scss";
+import EventList from "../../components/EventList";
+import ExploreFooter from "../../components/ExploreFooter";
 
 const ExplorePage = () => {
   const [events, setEvents] = useState([]);
@@ -13,6 +13,7 @@ const ExplorePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [cities, setCities] = useState([]);
+  const [showAllEvents, setShowAllEvents] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -52,10 +53,16 @@ const ExplorePage = () => {
         cities={cities}
         setSelectedCity={setSelectedCity}
       />
-      <ExploreComponent
+
+      <EventList
         listName="Upcoming Events"
-        events={events}
+        events={showAllEvents ? events : events.slice(0, 4)}
         setFilters={setFilters}
+      />
+
+      <ExploreFooter
+        showAllEvents={showAllEvents}
+        setShowAllEvents={setShowAllEvents}
       />
     </div>
   );
