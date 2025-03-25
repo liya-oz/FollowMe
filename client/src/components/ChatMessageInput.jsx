@@ -1,17 +1,16 @@
 import { useState } from "react";
 import socket from "../socket";
+import PropTypes from "prop-types";
 
-const ChatMessageInput = () => {
+const ChatMessageInput = ({ selectedFriendId }) => {
   const [message, setMessage] = useState("");
 
   const handleSend = () => {
     const trimmed = message.trim();
-    if (!trimmed) return;
-    // it is Fady's fake account's ID
-    const recipientId = "neHgVT_nEfQmvGX3AAAD";
+    if (!trimmed || !selectedFriendId) return;
 
     socket.emit("private_message", {
-      to: recipientId,
+      to: selectedFriendId,
       content: trimmed,
     });
 
@@ -30,6 +29,10 @@ const ChatMessageInput = () => {
       <button onClick={handleSend}>Send</button>
     </div>
   );
+};
+
+ChatMessageInput.propTypes = {
+  selectedFriendId: PropTypes.string.isRequired,
 };
 
 export default ChatMessageInput;
