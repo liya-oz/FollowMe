@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
+
 export default function initSocketHandlers(io) {
-  // JWT authentication middleware
+  // JWT middleware
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
     if (!token) {
@@ -18,9 +19,12 @@ export default function initSocketHandlers(io) {
     }
   });
 
-  // Socket connection handler
+  // Connection handler
   io.on("connection", (socket) => {
     console.log("New user connected:", socket.id, "User ID:", socket.userId);
+
+    socket.join(`user:${socket.userId}`);
+    console.log(`User ${socket.userId} joined room user:${socket.userId}`);
 
     socket.on("private_message", ({ to, content }) => {
       const message = {
@@ -33,11 +37,6 @@ export default function initSocketHandlers(io) {
 
       io.to(`user:${to}`).emit("private_message", message);
       socket.emit("private_message", message);
-    });
-
-    socket.on("join_room", (userId) => {
-      socket.join(`user:${userId}`);
-      console.log(`User ${userId} joined room user:${userId}`);
     });
 
     socket.on("disconnect", () => {
