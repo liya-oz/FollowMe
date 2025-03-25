@@ -3,8 +3,8 @@ import express from "express";
 import userRouter from "./routes/userRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import eventRouter from "./routes/eventRoutes.js";
-
 import eventAttendeeRouter from "./routes/eventAttendeeRoutes.js";
+import friendRoutes from "./routes/friendRoutes.js";
 
 // Create an express server
 const app = express();
@@ -21,5 +21,6 @@ app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/event-attendees", eventAttendeeRouter);
+app.use("/api/friends", friendRoutes);
 
 export default app;
