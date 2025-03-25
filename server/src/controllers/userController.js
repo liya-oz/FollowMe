@@ -133,3 +133,32 @@ export const getUserUpcomingEvents = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const getFriends = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).populate(
+      "friends.friendId",
+      "name profilePhoto",
+    );
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const sortField =
+      req.query.sort === "name" ? "friendId.name" : "friends.addedAt";
+    const sortedFriends = user.friends.sort((a, b) => {
+      if (sortField === "friendId.name") {
+        return a.friendId.name.localeCompare(b.friendId.name);
+      } else {
+        return b.addedAt - a.addedAt;
+      }
+    });
+
+    res.status(200).json({ success: true, result: sortedFriends });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
