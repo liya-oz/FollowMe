@@ -1,12 +1,16 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import {
   MdCalendarMonth,
   MdAccessTimeFilled,
   MdLocationPin,
   MdGroups,
+  MdPersonAdd,
 } from "react-icons/md";
+import { Button } from "@mui/material";
+import { FaEye } from "react-icons/fa";
 
 import "../styles/EventDetailsModal.scss";
 import userIcon from "../assets/icons/user-icon.png";
@@ -16,8 +20,11 @@ const EventDetailsModal = ({ event, onClose }) => {
   const [participated, setParticipated] = useState(false);
   const [fullEvent, setFullEvent] = useState(null);
   const [attendees, setAttendees] = useState([]);
+  const [isAddingFriend, setIsAddingFriend] = useState(false);
+  const [showAllAttendees, setShowAllAttendees] = useState(false);
   const { authToken, user } = useContext(AuthContext);
   const modalRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -128,6 +135,40 @@ const EventDetailsModal = ({ event, onClose }) => {
     }
   };
 
+  const handleViewProfile = (userId) => {
+    onClose();
+    navigate(`/user/${userId}`);
+  };
+
+  const handleAddFriend = async (friendId) => {
+    if (!authToken || !friendId) return;
+
+    setIsAddingFriend(true);
+
+    try {
+      const response = await fetch("/api/friends", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ friendId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Friend added successfully!");
+      } else {
+        throw new Error(data.message || "Failed to add friend");
+      }
+    } catch (error) {
+      alert(error.message || "Error adding friend.");
+    } finally {
+      setIsAddingFriend(false);
+    }
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal-content" ref={modalRef}>
@@ -162,18 +203,43 @@ const EventDetailsModal = ({ event, onClose }) => {
           <div className="attendees-wrapper">
             <div className="attendees-label">
               <MdGroups className="attendees-icon" />
-              <span>Attendees</span>
+              <span>Attendees ({attendees.length})</span>
             </div>
             <div className="event-attendees">
-              {attendees.map((attendee, index) => (
-                <img
-                  key={index}
-                  src={attendee.userId?.profilePhoto || userIcon}
-                  alt={attendee.userId?.name || "Attendee"}
-                  className="attendee-image"
-                />
-              ))}
+              {(showAllAttendees ? attendees : attendees.slice(0, 4)).map(
+                (attendee, index) => (
+                  <div key={index} className="attendee-container">
+                    <img
+                      src={attendee.userId?.profilePhoto || userIcon}
+                      alt={attendee.userId?.name || "Attendee"}
+                      className="attendee-image"
+                      onClick={() => handleViewProfile(attendee.userId?._id)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    {user && attendee.userId?._id !== user._id && (
+                      <button
+                        className="add-friend-button"
+                        onClick={() => handleAddFriend(attendee.userId?._id)}
+                        disabled={isAddingFriend}
+                      >
+                        <MdPersonAdd />
+                      </button>
+                    )}
+                  </div>
+                ),
+              )}
             </div>
+
+            {attendees.length > 4 && !showAllAttendees && (
+              <Button
+                variant="text"
+                className="view-more-button"
+                startIcon={<FaEye />}
+                onClick={() => setShowAllAttendees(true)}
+              >
+                Show more
+              </Button>
+            )}
           </div>
         </div>
 
