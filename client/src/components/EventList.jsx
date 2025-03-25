@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import "../styles/EventList.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -7,23 +7,40 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { AuthContext } from "../contexts/AuthContext";
 import EventDetailsModal from "./EventDetailsModal";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+import arrowDownIcon from "../assets/icons/arrow-down.svg";
+
 const EventList = ({ listName, events }) => {
-  const [dateRange, setDateRange] = useState({
-    from: new Date().toISOString().split("T")[0],
+  const { authToken } = useContext(AuthContext);
+
+  const [filters, setFilters] = useState({
+    from: "",
     to: "",
+    category: "All Categories",
   });
+
   const [open, setOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [modalType, setModalType] = useState("");
-  const { authToken } = useContext(AuthContext);
+
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [categories, setCategories] = useState(["All Categories"]);
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  useEffect(() => {
+    const unique = [
+      "All Categories",
+      ...new Set(events.map((event) => event.category)),
+    ];
+    setCategories(unique);
+  }, [events]);
 
   const handleOpen = (event) => {
     setSelectedEvent(event);
-    if (authToken) {
-      setModalType("details");
-    } else {
-      setModalType("login");
-    }
+    setModalType(authToken ? "details" : "login");
     setOpen(true);
   };
 
@@ -33,44 +50,77 @@ const EventList = ({ listName, events }) => {
     setModalType("");
   };
 
-  const handleDateChange = (field, value) => {
-    setDateRange((prev) => ({ ...prev, [field]: value }));
+  const handleDateChange = (field, date) => {
+    const formatted = date ? format(date, "yyyy-MM-dd") : "";
+    setFilters((prev) => ({ ...prev, [field]: formatted }));
+
+    if (field === "from") setFromDate(date);
+    if (field === "to") setToDate(date);
   };
 
-  const fromDate = dateRange.from ? new Date(dateRange.from) : null;
-  const toDate = dateRange.to ? new Date(dateRange.to) : null;
+  const handleCategoryChange = (category) => {
+    setFilters((prev) => ({ ...prev, category }));
+    setShowCategoryDropdown(false);
+  };
+
+  const from = filters.from ? new Date(filters.from) : null;
+  const to = filters.to ? new Date(filters.to) : null;
   const filteredEvents = events.filter((event) => {
     const eventDate = new Date(event.time);
-    return (
-      (!fromDate || eventDate >= fromDate) && (!toDate || eventDate <= toDate)
-    );
+    const matchDate = (!from || eventDate >= from) && (!to || eventDate <= to);
+    const matchCat =
+      filters.category === "All Categories" ||
+      event.category === filters.category;
+    return matchDate && matchCat;
   });
 
   return (
     <div className="event-list-container">
       <div className="event-list-header">
         <h2>{listName}</h2>
-        <div className="event-list-date-filters">
-          <div className="event-list-filter-wrapper">
-            <p>From</p>
-            <input
-              type="date"
-              value={dateRange.from}
-              onChange={(e) => handleDateChange("from", e.target.value)}
-              className="event-list-date-input"
-            />
+        <div className="filters">
+          <div className="filter-dropdown">
+            <div
+              className="filter-box category-filter"
+              onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+            >
+              <span className="bold-text">{filters.category}</span>
+              <img src={arrowDownIcon} alt="Dropdown" className="arrow-icon" />
+            </div>
+
+            {showCategoryDropdown && (
+              <div className="dropdown-contents">
+                {categories.map((cat, idx) => (
+                  <p key={idx} onClick={() => handleCategoryChange(cat)}>
+                    {cat}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="event-list-filter-wrapper">
-            <p>To</p>
-            <input
-              type="date"
-              value={dateRange.to}
-              onChange={(e) => handleDateChange("to", e.target.value)}
-              className="event-list-date-input"
+
+          <div className="filter-box">
+            <span className="bold-text">By date</span>
+            <span>From</span>
+            <ReactDatePicker
+              selected={fromDate}
+              onChange={(date) => handleDateChange("from", date)}
+              dateFormat="yyyy-MM-dd"
+              className="date-picker"
+              placeholderText="Select date"
+            />
+            <span>To</span>
+            <ReactDatePicker
+              selected={toDate}
+              onChange={(date) => handleDateChange("to", date)}
+              dateFormat="yyyy-MM-dd"
+              className="date-picker"
+              placeholderText="Select date"
             />
           </div>
         </div>
       </div>
+
       <div className="event-list-grid">
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
@@ -102,6 +152,7 @@ const EventList = ({ listName, events }) => {
           <p>No events found matching the filters.</p>
         )}
       </div>
+
       <Modal open={open} onClose={handleClose}>
         <>
           {modalType === "login" ? (

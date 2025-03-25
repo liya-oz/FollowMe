@@ -88,16 +88,38 @@
 }
 
 .modal-middle {
-  height: 40%;
+  height: auto; // fixed height yerine auto olmalı
   width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 1rem;
+  gap: 20px; // iki bölüm arasında boşluk
 }
 
 .event-info {
   width: 60%;
   text-align: left;
+}
+
+// Katılımcılar için sağ taraf kutusunu kare yapalım
+.attendees-side {
+  width: 35%;
+  aspect-ratio: 1/1; // Kare kutu oluşturmak için en/boy oranını 1/1 yapıyoruz
+  display: flex;
+  flex-direction: column;
+}
+
+.attendees-wrapper {
+  position: relative;
+  width: 14rem;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--light-gray);
+  border-radius: var(--border-radius-small);
+  padding: 10px;
+  background-color: var(--darker-white);
+  display: flex;
+  flex-direction: column;
 }
 
 .event-description {
@@ -106,26 +128,18 @@
   margin-top: 10px;
 }
 
-.attendees-wrapper {
-  position: relative;
-  max-width: 160px;
-  overflow: hidden;
-  margin-bottom: 10px;
-  margin-right: 40px;
-}
-
 .event-attendees {
-  position: relative;
   display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
-  gap: 10px;
-  padding-bottom: 6px;
-  scrollbar-width: none;
-}
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 5px;
+  overflow-y: auto;
+  flex: 1;
+  align-content: center;
 
-.event-attendees::-webkit-scrollbar {
-  display: none;
+  &::after {
+    display: none;
+  }
 }
 
 .attendee-image {
@@ -142,11 +156,10 @@
   align-items: center;
   font-weight: bold;
   font-size: 0.9rem;
-  margin-top: -6px;
   gap: 5px;
   color: var(--primary-green);
   padding-left: 5px;
-  margin-bottom: 40px;
+  margin-bottom: 15px;
 }
 
 .attendees-icon {
@@ -198,6 +211,61 @@
   margin-right: 50px;
 }
 
+.attendee-container {
+  position: relative;
+
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .attendee-image {
+    width: 40px;
+    height: 40px;
+  }
+
+  .add-friend-button {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+
+    &:hover {
+      background-color: var(--light-green);
+    }
+
+    &:disabled {
+      background-color: var(--gray);
+      cursor: not-allowed;
+    }
+  }
+
+  &:hover .add-friend-button {
+    opacity: 1;
+  }
+}
+
+.view-more-button {
+  &.MuiButton-root {
+    color: var(--primary-green);
+    padding: 5px 5px;
+    font-size: 0.8rem;
+    border-radius: var(--border-radius-small);
+  }
+}
+
 @media (max-width: 768px) {
   .modal-top {
     padding-top: 20px;
@@ -246,7 +314,7 @@
     justify-content: center;
     padding-left: 0;
     font-size: 0.85rem;
-    margin-bottom: 8px;
+    margin-bottom: 15px;
   }
 
   .event-attendees {
@@ -271,5 +339,15 @@
   .participate-button {
     width: 100%;
     margin: 10px 0 0 0;
+  }
+
+  .attendees-side {
+    width: 100%;
+    aspect-ratio: auto; // Mobilde kare olmak zorunda değil
+    max-height: 300px; // Mobilde maksimum yükseklik
+  }
+
+  .attendee-container {
+    width: calc(33.33% - 6px); // Mobilde daha sıkı 3 sütun
   }
 }

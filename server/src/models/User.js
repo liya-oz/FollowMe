@@ -7,11 +7,17 @@ const userSchema = new mongoose.Schema(
     bio: { type: String, default: "" },
     interests: { type: String, default: "" },
     profilePhoto: { type: String, default: "" },
-    age: { type: Number }, // New field added for age
-    location: { type: String, default: "" }, // New field added for location
+    age: { type: Number },
+    location: { type: String, default: "" },
     isPublic: { type: Boolean, default: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    friends: [
+      {
+        friendId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        addedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true },
 );

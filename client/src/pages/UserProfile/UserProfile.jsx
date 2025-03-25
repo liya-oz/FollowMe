@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Paper,
@@ -19,9 +19,10 @@ import EventHistory from "../../components/EventHistory";
 import "../../styles/UserProfile.scss";
 import PropTypes from "prop-types";
 
-const UserProfile = ({ profileId, editable = false }) => {
+const UserProfile = ({ editable = false }) => {
   const { updateProfile } = useAuth();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -38,7 +39,7 @@ const UserProfile = ({ profileId, editable = false }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const endpoint = editable ? "/api/users/me" : `/api/users/${profileId}`;
+        const endpoint = editable ? "/api/users/me" : `/api/users/${id}`;
         const response = await fetch(endpoint, {
           method: "GET",
           headers: {
@@ -80,7 +81,7 @@ const UserProfile = ({ profileId, editable = false }) => {
     };
 
     fetchUserProfile();
-  }, [profileId, editable]);
+  }, [id, editable]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -240,15 +241,25 @@ const UserProfile = ({ profileId, editable = false }) => {
             </Box>
           ) : (
             <Box className="user-profile-form">
-              {["name", "interests", "age", "location", "about"].map(
-                (field) => (
-                  <Box key={field} className="field-row">
+              {formFields
+                .filter((field) => field !== "profilePhoto") // Görüntüleme modunda profilePhoto'yu filtreleme
+                .map((field) => (
+                  <Box
+                    key={field}
+                    className="field-row"
+                    sx={{ alignItems: "center" }}
+                  >
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ marginRight: "1rem", minWidth: "80px" }}
+                    >
+                      {field.charAt(0).toUpperCase() + field.slice(1)}:
+                    </Typography>
                     <Typography variant="body1" className="display-text">
                       {formData[field] || "Not provided"}
                     </Typography>
                   </Box>
-                ),
-              )}
+                ))}
               <FormControlLabel
                 control={
                   <Checkbox
