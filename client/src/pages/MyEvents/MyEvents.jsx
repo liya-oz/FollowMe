@@ -3,12 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { getMyEvents } from "../../api/eventAttendee";
 import { AuthContext } from "../../contexts/AuthContext";
 import "../../styles/MyEvents.scss";
+import EventDetailsModal from "../../components/EventDetailsModal";
 
 const MyEvents = () => {
   const { user, authToken } = useContext(AuthContext);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+
   const navigate = useNavigate();
 
   const fetchEvents = useCallback(async () => {
@@ -30,6 +34,16 @@ const MyEvents = () => {
 
   const handleEditEvent = (eventId) => {
     navigate(`/edit-event/${eventId}`);
+  };
+
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    setShowDetails(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedEvent(null);
+    setShowDetails(false);
   };
 
   const handleDeleteEvent = async (eventId) => {
@@ -63,7 +77,11 @@ const MyEvents = () => {
     const eventDate = new Date(event.time).toLocaleString();
 
     return (
-      <div key={event._id} className="my-events-item">
+      <div
+        key={event._id}
+        className="my-events-item"
+        onClick={() => handleEventClick(event)}
+      >
         {event.image && (
           <img
             src={event.image}
@@ -125,6 +143,9 @@ const MyEvents = () => {
           .map(renderEventItem)
       ) : (
         <p>No events found.</p>
+      )}
+      {showDetails && selectedEvent && (
+        <EventDetailsModal event={selectedEvent} onClose={handleCloseModal} />
       )}
     </div>
   );
