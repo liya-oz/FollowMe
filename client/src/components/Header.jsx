@@ -80,7 +80,7 @@ function Header({ setSearchQuery, cities, setSelectedCity }) {
             </div>
           )}
         </div>
-        <Link to="/register" className="sign-in-button">
+        <Link to="/login" className="sign-in-button">
           Sign In
         </Link>
       </div>
