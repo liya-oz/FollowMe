@@ -1,25 +1,6 @@
 import jwt from "jsonwebtoken";
-import { v4 as uuidv4 } from "uuid";
-
-// Message validation schema
-const validateMessage = (message) => {
-  if (!message.to || !message.content) {
-    return { valid: false, error: "Recipient and content are required" };
-  }
-
-  if (typeof message.content !== "string" || message.content.trim() === "") {
-    return {
-      valid: false,
-      error: "Message content must be a non-empty string",
-    };
-  }
-
-  if (message.content.length > 1000) {
-    return { valid: false, error: "Message too long (max 1000 characters)" };
-  }
-
-  return { valid: true };
-};
+import { handlePrivateMessage } from "./controllers/chatSocketHandler.js";
+import { validateMessage } from "./util/messageValidation.js";
 
 const createRateLimiter = (limit, windowMs) => {
   const timestamps = new Map();
@@ -39,7 +20,7 @@ const createRateLimiter = (limit, windowMs) => {
   };
 };
 
-const rateLimiter = createRateLimiter(10, 1000); // max 10 messages/sec
+const rateLimiter = createRateLimiter(10, 1000);
 
 export default function initSocketHandlers(io) {
   // JWT auth middleware
@@ -65,7 +46,6 @@ export default function initSocketHandlers(io) {
     console.log("New user connected:", socket.id, "User ID:", socket.userId);
     socket.join(`user:${socket.userId}`);
 
-    // Handle private messages with rate limiting
     socket.on("private_message", ({ to, content }) => {
       if (!rateLimiter(socket)) return;
 
@@ -74,20 +54,7 @@ export default function initSocketHandlers(io) {
         return socket.emit("error", validation.error);
       }
 
-      if (to === socket.userId) {
-        return socket.emit("error", "Cannot send message to yourself");
-      }
-
-      const message = {
-        id: uuidv4(),
-        from: socket.userId,
-        to,
-        content: content.trim(),
-        timestamp: new Date().toISOString(),
-      };
-
-      console.log("Private message:", message);
-      io.to(`user:${to}`).emit("private_message", message);
+      handlePrivateMessage(socket, io, { to, content });
     });
 
     socket.on("disconnect", () => {
