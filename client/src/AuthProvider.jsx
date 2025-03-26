@@ -3,12 +3,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { AuthContext } from "./contexts/AuthContext";
 import socket from "./socket";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(() =>
     localStorage.getItem("authToken"),
   );
   const [user, setUser] = useState(null);
+  const [decodedToken, setDecodedToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,11 +18,20 @@ export const AuthProvider = ({ children }) => {
   const updateToken = useCallback((token) => {
     if (token) {
       localStorage.setItem("authToken", token);
+      try {
+        const decoded = jwtDecode(token);
+        setDecodedToken(decoded);
+      } catch (err) {
+        console.warn("Invalid JWT:", err.message);
+        setDecodedToken(null);
+      }
     } else {
       localStorage.removeItem("authToken");
+      setDecodedToken(null);
     }
     setAuthToken(token);
   }, []);
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!authToken) {
@@ -99,6 +110,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("authToken");
     setAuthToken(null);
     setUser(null);
+    setDecodedToken(null);
     navigate("/");
   }, [navigate]);
 
@@ -110,6 +122,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         isLoading,
         user,
+        decodedToken,
         setAuthToken: updateToken,
       }}
     >

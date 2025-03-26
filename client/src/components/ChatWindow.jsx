@@ -1,8 +1,39 @@
+import { useEffect, useState, useContext } from "react";
 import ChatMessageList from "./ChatMessageList";
 import ChatMessageInput from "./ChatMessageInput";
 import PropTypes from "prop-types";
+import socket from "../socket";
+import { AuthContext } from "../contexts/AuthContext";
 
 const ChatWindow = ({ selectedFriend }) => {
+  const [messages, setMessages] = useState([]);
+  const { decodedToken } = useContext(AuthContext);
+  const currentUserId = decodedToken?.id;
+
+  useEffect(() => {
+    setMessages([]);
+  }, [selectedFriend]);
+
+  useEffect(() => {
+    if (!selectedFriend) return;
+
+    const handlePrivateMessage = (message) => {
+      console.log("Получено сообщение:", message);
+
+      setMessages((prev) => [...prev, message]);
+    };
+
+    socket.on("private_message", handlePrivateMessage);
+
+    return () => {
+      socket.off("private_message", handlePrivateMessage);
+    };
+  }, [selectedFriend, currentUserId]);
+
+  const handleSend = (msg) => {
+    setMessages((prev) => [...prev, msg]);
+  };
+
   if (!selectedFriend) {
     return (
       <div
@@ -43,8 +74,15 @@ const ChatWindow = ({ selectedFriend }) => {
         <strong>{selectedFriend.friendId.name}</strong>
       </div>
 
-      <ChatMessageList selectedFriendId={selectedFriend.friendId._id} />
-      <ChatMessageInput selectedFriendId={selectedFriend.friendId._id} />
+      <ChatMessageList
+        messages={messages}
+        selectedFriendId={selectedFriend.friendId._id}
+        currentUserId={currentUserId}
+      />
+      <ChatMessageInput
+        selectedFriendId={selectedFriend.friendId._id}
+        onSend={handleSend}
+      />
     </div>
   );
 };
@@ -54,7 +92,3 @@ ChatWindow.propTypes = {
 };
 
 export default ChatWindow;
-
-//Events:
-//
-// private_message (on), typing, stop_typing (on)
