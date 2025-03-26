@@ -5,14 +5,16 @@ import {
   FaCalendarAlt,
   FaPlus,
   FaUserFriends,
-  FaCog,
   FaComments,
 } from "react-icons/fa";
 import "../styles/Navbar.scss";
-
 import PropTypes from "prop-types";
 
-const NavbarItem = ({ icon, text, to }) => {
+const NavbarItem = ({ icon, text, to, closeMenu }) => {
+  const handleClick = () => {
+    if (closeMenu) closeMenu();
+  };
+
   return (
     <li className="navbar-item">
       <NavLink
@@ -20,6 +22,7 @@ const NavbarItem = ({ icon, text, to }) => {
         className={({ isActive }) =>
           isActive ? "nav-link active" : "nav-link"
         }
+        onClick={handleClick}
       >
         {icon} <p>{text}</p>
       </NavLink>
@@ -31,9 +34,10 @@ NavbarItem.propTypes = {
   icon: PropTypes.element.isRequired,
   text: PropTypes.string.isRequired,
   to: PropTypes.string.isRequired,
+  closeMenu: PropTypes.func,
 };
 
-const Navbar = () => {
+const Navbar = ({ closeMenu }) => {
   return (
     <div className="navbar">
       <div className="navbar-top">
@@ -46,26 +50,31 @@ const Navbar = () => {
               icon={<FaHome className="nav-link-icon" />}
               text="Discovery"
               to="/discovery"
+              closeMenu={closeMenu}
             />
             <NavbarItem
               icon={<FaCompass className="nav-link-icon" />}
               text="Explore"
               to="/explore"
+              closeMenu={closeMenu}
             />
             <NavbarItem
               icon={<FaCalendarAlt className="nav-link-icon" />}
               text="My Events"
               to="/my-events"
+              closeMenu={closeMenu}
             />
             <NavbarItem
               icon={<FaPlus className="nav-link-icon" />}
               text="Create Event"
               to="/create-event"
+              closeMenu={closeMenu}
             />
             <NavbarItem
               icon={<FaUserFriends className="nav-link-icon" />}
               text="My Friends"
               to="/my-friends"
+              closeMenu={closeMenu}
             />
             <NavbarItem
               icon={<FaComments className="nav-link-icon" />}
@@ -76,15 +85,14 @@ const Navbar = () => {
         </nav>
       </div>
       <div className="navbar-bottom">
-        <NavbarItem
-          icon={<FaCog className="nav-link-icon" />}
-          text="Settings"
-          to="/settings"
-        />
         <p className="bottom-text">FollowMe 2025. All rights reserved.</p>
       </div>
     </div>
   );
+};
+
+Navbar.propTypes = {
+  closeMenu: PropTypes.func,
 };
 
 export default Navbar;
