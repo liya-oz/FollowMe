@@ -45,7 +45,7 @@ const ChatWindow = ({ selectedFriend }) => {
         }}
       >
         <p style={{ fontStyle: "italic", color: "#888" }}>
-          Выберите друга, чтобы начать чат
+          Pick a friend to start chatting!
         </p>
       </div>
     );
