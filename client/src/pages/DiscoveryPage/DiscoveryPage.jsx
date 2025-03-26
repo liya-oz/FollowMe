@@ -3,6 +3,7 @@ import EventList from "../../components/EventList";
 import TopBanner from "../../components/TopBanner";
 import DiscoveryEventCreationBox from "../../components/DiscoveryEventCreationBox";
 import DiscoveryHeader from "../../components/discovery-header";
+import ExploreFooter from "../../components/ExploreFooter";
 import styles from "../../styles/DiscoveryPage.module.scss";
 import useFilteredEvents from "../../hooks/useFilteredEvents";
 
@@ -11,6 +12,7 @@ const DiscoveryPage = () => {
     useFilteredEvents();
 
   const [cities, setCities] = useState([]);
+  const [showAllEvents, setShowAllEvents] = useState(false);
 
   useEffect(() => {
     const uniqueCities = [...new Set(events.map((event) => event.location))];
@@ -29,7 +31,11 @@ const DiscoveryPage = () => {
         listName="Discover Events"
         events={events}
         onFilterChange={handleFilterChange}
-        showAllEvents={true}
+        showAllEvents={showAllEvents}
+      />
+      <ExploreFooter
+        showAllEvents={showAllEvents}
+        setShowAllEvents={setShowAllEvents}
       />
       <DiscoveryEventCreationBox />
     </div>

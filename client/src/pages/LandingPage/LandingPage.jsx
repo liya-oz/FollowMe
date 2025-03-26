@@ -5,29 +5,24 @@ import EventCreationBox from "../../components/EventCreationBox";
 import Footer from "../../components/Footer";
 import useFilteredEvents from "../../hooks/useFilteredEvents";
 import "../../styles/LandingPage.scss";
+import { useEffect, useState } from "react";
+import ExploreFooter from "../../components/ExploreFooter";
 
 const LandingPage = () => {
-  const {
-    events,
-    filters,
-    setSearchQuery,
-    setSelectedCity,
-    handleFilterChange,
-  } = useFilteredEvents();
-
-  const uniqueCities = Array.from(
-    new Set(events.map((event) => event.location)),
-  );
+  const { events, handleFilterChange, setSearchQuery, setSelectedCity } =
+    useFilteredEvents();
+  const [showAllEvents, setShowAllEvents] = useState(false);
+  const [cities, setCities] = useState([]);
+  useEffect(() => {
+    const uniqueCities = [...new Set(events.map((event) => event.location))];
+    setCities(uniqueCities);
+  }, [events]);
 
   return (
     <>
       <Header
         setSearchQuery={setSearchQuery}
-        cities={uniqueCities}
-        selectedCategory={filters.category}
-        setSelectedCategory={(cat) =>
-          handleFilterChange({ ...filters, category: cat })
-        }
+        cities={cities}
         setSelectedCity={setSelectedCity}
       />
       <Intro />
@@ -35,8 +30,13 @@ const LandingPage = () => {
         <EventList
           listName="Upcoming Events"
           events={events}
-          showAllEvents={true}
+          showAllEvents={showAllEvents}
           onFilterChange={handleFilterChange}
+        />
+        <ExploreFooter
+          showAllEvents={showAllEvents}
+          setShowAllEvents={setShowAllEvents}
+          hideCreateButton={true}
         />
       </div>
       <EventCreationBox />

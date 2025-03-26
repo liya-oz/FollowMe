@@ -39,12 +39,16 @@ function DiscoveryHeader({ setSearchQuery, cities, setSelectedCity }) {
   const handleCityInputChange = (e) => {
     const value = e.target.value.trim();
     setCityInput(value);
-
+    if (value === "") {
+      setSelectedCity("");
+      setShowCityDropdown(false);
+      return;
+    }
     const filteredCities = cities.filter((city) =>
       city.toLowerCase().startsWith(value.toLowerCase()),
     );
 
-    setShowCityDropdown(value !== "" && filteredCities.length > 0);
+    setShowCityDropdown(filteredCities.length > 0);
   };
 
   const filteredCities = cities.filter((city) =>

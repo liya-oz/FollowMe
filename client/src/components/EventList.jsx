@@ -122,7 +122,7 @@ const EventList = ({
 
   const displayedEvents = showAllEvents
     ? filteredEvents
-    : filteredEvents.slice(0, 6);
+    : filteredEvents.slice(0, 8);
 
   return (
     <div className="event-list-container">
