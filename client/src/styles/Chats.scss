@@ -1,0 +1,14 @@
+.chats-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f7f7f7;
+}
+
+.chats-container > * {
+  flex: 1;
+  border-right: 1px solid #ccc;
+}
+
+.chats-container > :last-child {
+  border-right: none;
+}
