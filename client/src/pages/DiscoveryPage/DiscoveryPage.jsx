@@ -36,6 +36,7 @@ const DiscoveryPage = () => {
       <ExploreFooter
         showAllEvents={showAllEvents}
         setShowAllEvents={setShowAllEvents}
+        hideCreateButton={true}
       />
       <DiscoveryEventCreationBox />
     </div>
