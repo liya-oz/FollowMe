@@ -1,38 +1,55 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
+import PropTypes from "prop-types";
 import ChatMessageList from "./ChatMessageList";
 import ChatMessageInput from "./ChatMessageInput";
-import PropTypes from "prop-types";
 import socket from "../socket";
 import { AuthContext } from "../contexts/AuthContext";
 
 const ChatWindow = ({ selectedFriend }) => {
   const [messages, setMessages] = useState([]);
-  const { decodedToken } = useContext(AuthContext);
+  const { authToken, decodedToken } = useContext(AuthContext);
   const currentUserId = decodedToken?.id;
+
+  const friend = selectedFriend?.friendId;
+  const friendId = friend?._id;
+  const friendName = friend?.name;
+  const friendProfilePhoto = friend?.profilePhoto || "/default-profile.png";
 
   useEffect(() => {
     setMessages([]);
   }, [selectedFriend]);
 
   useEffect(() => {
+    if (!selectedFriend || !currentUserId || !authToken) return;
+    const loadChatHistory = async () => {
+      try {
+        const res = await fetch(`/api/chat/history/${friendId}`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        });
+        if (!res.ok) throw new Error("Failed to fetch chat history");
+        const data = await res.json();
+        setMessages(data);
+      } catch (err) {
+        console.error("Error loading chat history:", err);
+      }
+    };
+    loadChatHistory();
+  }, [selectedFriend, currentUserId, authToken, friendId]);
+
+  useEffect(() => {
     if (!selectedFriend) return;
-
     const handlePrivateMessage = (message) => {
-      console.log("Получено сообщение:", message);
-
-      setMessages((prev) => [...prev, message]);
+      if (message.from === friendId || message.to === friendId) {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      }
     };
-
     socket.on("private_message", handlePrivateMessage);
+    return () => socket.off("private_message", handlePrivateMessage);
+  }, [selectedFriend, friendId]);
 
-    return () => {
-      socket.off("private_message", handlePrivateMessage);
-    };
-  }, [selectedFriend, currentUserId]);
-
-  const handleSend = (msg) => {
+  const handleSend = useCallback((msg) => {
     setMessages((prev) => [...prev, msg]);
-  };
+  }, []);
 
   if (!selectedFriend) {
     return (
@@ -62,8 +79,8 @@ const ChatWindow = ({ selectedFriend }) => {
         }}
       >
         <img
-          src={selectedFriend.friendId.profilePhoto || "/default-profile.png"}
-          alt={selectedFriend.friendId.name}
+          src={friendProfilePhoto}
+          alt={friendName}
           style={{
             width: 40,
             height: 40,
@@ -71,18 +88,15 @@ const ChatWindow = ({ selectedFriend }) => {
             marginRight: 10,
           }}
         />
-        <strong>{selectedFriend.friendId.name}</strong>
+        <strong>{friendName}</strong>
       </div>
 
       <ChatMessageList
         messages={messages}
-        selectedFriendId={selectedFriend.friendId._id}
+        selectedFriendId={friendId}
         currentUserId={currentUserId}
       />
-      <ChatMessageInput
-        selectedFriendId={selectedFriend.friendId._id}
-        onSend={handleSend}
-      />
+      <ChatMessageInput selectedFriendId={friendId} onSend={handleSend} />
     </div>
   );
 };

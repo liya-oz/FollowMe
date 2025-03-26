@@ -5,6 +5,7 @@ import authRouter from "./routes/authRoutes.js";
 import eventRouter from "./routes/eventRoutes.js";
 import eventAttendeeRouter from "./routes/eventAttendeeRoutes.js";
 import friendRoutes from "./routes/friendRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
 
 // Create an express server
 const app = express();
@@ -22,5 +23,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/event-attendees", eventAttendeeRouter);
 app.use("/api/friends", friendRoutes);
+app.use("/api/chat", chatRoutes);
 
 export default app;
