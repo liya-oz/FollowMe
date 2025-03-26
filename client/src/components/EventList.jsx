@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import PropTypes from "prop-types";
 import "../styles/EventList.scss";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -12,8 +12,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import arrowDownIcon from "../assets/icons/arrow-down.svg";
 
-const EventList = ({ listName, events }) => {
+const EventList = ({
+  listName,
+  events,
+  showAllEvents = true,
+  onFilterChange,
+}) => {
   const { authToken } = useContext(AuthContext);
+  const dropdownRef = useRef(null);
 
   const [filters, setFilters] = useState({
     from: "",
@@ -29,6 +35,23 @@ const EventList = ({ listName, events }) => {
   const [categories, setCategories] = useState(["All Categories"]);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowCategoryDropdown(false);
+      }
+    };
+
+    if (showCategoryDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showCategoryDropdown]);
 
   useEffect(() => {
     const unique = [
@@ -52,34 +75,61 @@ const EventList = ({ listName, events }) => {
 
   const handleDateChange = (field, date) => {
     const formatted = date ? format(date, "yyyy-MM-dd") : "";
-    setFilters((prev) => ({ ...prev, [field]: formatted }));
+    const updatedFilters = { ...filters, [field]: formatted };
 
+    setFilters(updatedFilters);
     if (field === "from") setFromDate(date);
     if (field === "to") setToDate(date);
+
+    onFilterChange?.(updatedFilters);
   };
 
   const handleCategoryChange = (category) => {
-    setFilters((prev) => ({ ...prev, category }));
+    const updatedFilters = {
+      ...filters,
+      category,
+    };
+
+    setFilters(updatedFilters);
     setShowCategoryDropdown(false);
+
+    if (category === "All Categories") {
+      onFilterChange?.({
+        from: "",
+        to: "",
+        category: "All Categories",
+      });
+      setFromDate(null);
+      setToDate(null);
+    } else {
+      onFilterChange?.(updatedFilters);
+    }
   };
 
-  const from = filters.from ? new Date(filters.from) : null;
-  const to = filters.to ? new Date(filters.to) : null;
   const filteredEvents = events.filter((event) => {
-    const eventDate = new Date(event.time);
-    const matchDate = (!from || eventDate >= from) && (!to || eventDate <= to);
-    const matchCat =
+    const from = filters.from ? new Date(filters.from) : null;
+    const to = filters.to ? new Date(filters.to) : null;
+
+    const matchCategory =
       filters.category === "All Categories" ||
       event.category === filters.category;
-    return matchDate && matchCat;
+
+    const matchFrom = from ? new Date(event.time) >= from : true;
+    const matchTo = to ? new Date(event.time) <= to : true;
+
+    return matchCategory && matchFrom && matchTo;
   });
+
+  const displayedEvents = showAllEvents
+    ? filteredEvents
+    : filteredEvents.slice(0, 8);
 
   return (
     <div className="event-list-container">
       <div className="event-list-header">
         <h2>{listName}</h2>
         <div className="filters">
-          <div className="filter-dropdown">
+          <div className="filter-dropdown" ref={dropdownRef}>
             <div
               className="filter-box category-filter"
               onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
@@ -122,8 +172,8 @@ const EventList = ({ listName, events }) => {
       </div>
 
       <div className="event-list-grid">
-        {filteredEvents.length > 0 ? (
-          filteredEvents.map((event) => (
+        {displayedEvents.length > 0 ? (
+          displayedEvents.map((event) => (
             <div
               key={event._id}
               className="event-list-item"
@@ -203,6 +253,8 @@ EventList.propTypes = {
       description: PropTypes.string,
     }),
   ).isRequired,
+  showAllEvents: PropTypes.bool,
+  onFilterChange: PropTypes.func,
 };
 
 export default EventList;

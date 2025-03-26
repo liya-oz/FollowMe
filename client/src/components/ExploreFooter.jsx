@@ -4,7 +4,11 @@ import { FaPlus, FaEye } from "react-icons/fa";
 import "../styles/ExploreFooter.scss";
 import CreateEventModal from "./CreateEventModal";
 
-const ExploreFooter = ({ showAllEvents, setShowAllEvents }) => {
+const ExploreFooter = ({
+  showAllEvents,
+  setShowAllEvents,
+  hideCreateButton = false,
+}) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
@@ -17,17 +21,21 @@ const ExploreFooter = ({ showAllEvents, setShowAllEvents }) => {
         {showAllEvents ? "Show Less" : "View More"}
       </button>
 
-      <button
-        className="footer-button create-event-btn"
-        onClick={() => setShowCreateModal(true)}
-      >
-        <FaPlus className="button-icon" /> Create Event
-      </button>
+      {!hideCreateButton && (
+        <>
+          <button
+            className="footer-button create-event-btn"
+            onClick={() => setShowCreateModal(true)}
+          >
+            <FaPlus className="button-icon" /> Create Event
+          </button>
 
-      <CreateEventModal
-        open={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-      />
+          <CreateEventModal
+            open={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+          />
+        </>
+      )}
     </div>
   );
 };
@@ -35,6 +43,7 @@ const ExploreFooter = ({ showAllEvents, setShowAllEvents }) => {
 ExploreFooter.propTypes = {
   showAllEvents: PropTypes.bool.isRequired,
   setShowAllEvents: PropTypes.func.isRequired,
+  hideCreateButton: PropTypes.bool,
 };
 
 export default ExploreFooter;

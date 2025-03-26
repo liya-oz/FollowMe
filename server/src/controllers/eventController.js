@@ -2,6 +2,16 @@ import Event from "../models/Event.js";
 import EventAttendee from "../models/EventAttendee.js";
 import { logError } from "../util/logging.js";
 
+export const getAllEvents = async (req, res) => {
+  try {
+    const events = await Event.find().sort({ createdAt: 1 });
+    res.status(200).json({ success: true, result: events });
+  } catch (error) {
+    logError(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export const getEvents = async (req, res) => {
   try {
     const { keyword, category, location, from, to, limit, page } = req.query;

@@ -116,6 +116,19 @@
     }
   }
 }
+.city-dropdown-content.scrollable {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.more-cities-note {
+  padding: 6px;
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--gray-dark);
+  background: var(--glass-grey);
+  font-style: italic;
+}
 
 .account-box {
   max-width: 250px;

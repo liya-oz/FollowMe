@@ -1,55 +1,43 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import EventList from "../../components/EventList";
 import TopBanner from "../../components/TopBanner";
 import DiscoveryEventCreationBox from "../../components/DiscoveryEventCreationBox";
 import DiscoveryHeader from "../../components/discovery-header";
+import ExploreFooter from "../../components/ExploreFooter";
 import styles from "../../styles/DiscoveryPage.module.scss";
+import useFilteredEvents from "../../hooks/useFilteredEvents";
 
 const DiscoveryPage = () => {
-  const [events, setEvents] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
+  const { events, handleFilterChange, setSearchQuery, setSelectedCity } =
+    useFilteredEvents();
+
+  const [cities, setCities] = useState([]);
+  const [showAllEvents, setShowAllEvents] = useState(false);
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const params = new URLSearchParams();
-        if (searchQuery) {
-          params.append("keyword", searchQuery);
-        }
-        if (selectedCity) {
-          params.append("location", selectedCity);
-        }
-        params.append("_", Date.now());
-
-        const response = await fetch(`/api/events?${params.toString()}`);
-        const data = await response.json();
-        if (data.success) {
-          setEvents(data.result);
-        } else {
-          console.error("Failed to fetch events:", data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    };
-
-    fetchEvents();
-  }, [searchQuery, selectedCity]);
-
-  const uniqueCities = Array.from(
-    new Set(events.map((event) => event.location)),
-  );
+    const uniqueCities = [...new Set(events.map((event) => event.location))];
+    setCities(uniqueCities);
+  }, [events]);
 
   return (
     <div className={`${styles.discoveryPage} ${styles.extraSpacing}`}>
       <DiscoveryHeader
         setSearchQuery={setSearchQuery}
-        cities={uniqueCities}
+        cities={cities}
         setSelectedCity={setSelectedCity}
       />
       <TopBanner />
-      <EventList listName="Discover Events" events={events} />
+      <EventList
+        listName="Discover Events"
+        events={events}
+        onFilterChange={handleFilterChange}
+        showAllEvents={showAllEvents}
+      />
+      <ExploreFooter
+        showAllEvents={showAllEvents}
+        setShowAllEvents={setShowAllEvents}
+        hideCreateButton={true}
+      />
       <DiscoveryEventCreationBox />
     </div>
   );
