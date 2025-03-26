@@ -16,14 +16,19 @@ function Header({ setSearchQuery, cities, setSelectedCity }) {
   };
 
   const handleCityInputChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
     setCityInput(value);
-    setSelectedCity(value);
-    if (value.trim() === "") {
+
+    if (value === "") {
+      setSelectedCity("");
       setShowCityDropdown(false);
-    } else {
-      setShowCityDropdown(true);
+      return;
     }
+    const filteredCities = cities.filter((city) =>
+      city.toLowerCase().startsWith(value.toLowerCase()),
+    );
+
+    setShowCityDropdown(filteredCities.length > 0);
   };
 
   const filteredCities = cities.filter((city) =>
@@ -37,12 +42,8 @@ function Header({ setSearchQuery, cities, setSelectedCity }) {
   };
 
   const handleCityKeyDown = (e) => {
-    if (e.key === "Enter") {
-      if (filteredCities.length > 0) {
-        handleCitySelect(filteredCities[0]);
-      } else {
-        setShowCityDropdown(false);
-      }
+    if (e.key === "Enter" && filteredCities.length > 0) {
+      handleCitySelect(filteredCities[0]);
     }
   };
 
@@ -70,8 +71,8 @@ function Header({ setSearchQuery, cities, setSelectedCity }) {
             onChange={handleCityInputChange}
             onKeyDown={handleCityKeyDown}
           />
-          {showCityDropdown && cityInput && filteredCities.length > 0 && (
-            <div className="dropdown-content">
+          {showCityDropdown && filteredCities.length > 0 && (
+            <div className="city-dropdown-content show">
               {filteredCities.map((city, index) => (
                 <div key={index} onClick={() => handleCitySelect(city)}>
                   {city}
