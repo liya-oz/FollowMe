@@ -75,7 +75,7 @@ const Login = () => {
           <p className="link-text">
             You do not have an account?{" "}
             <Link to="/register" className="link-word">
-              register
+              Register
             </Link>
           </p>
           <div className="divider">or</div>
