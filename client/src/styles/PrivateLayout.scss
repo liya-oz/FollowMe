@@ -15,3 +15,116 @@
     }
   }
 }
+
+.desktop-navbar {
+  display: block;
+}
+
+.private-layout-hamburger-menu {
+  display: none;
+}
+
+.mobile-navbar {
+  display: none;
+}
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 7rem;
+  left: 0;
+  width: 100%;
+  background-color: var(--darker-white);
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-out;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+
+  .mobile-menu-logo {
+    .img {
+      display: none;
+    }
+  }
+}
+
+.private-layout.menu-open .mobile-menu {
+  display: block;
+  transform: translateX(0);
+}
+
+@media screen and (max-width: 768px) {
+  .private-layout {
+    display: flex;
+    flex-direction: column;
+
+    .private-layout-content {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .desktop-navbar {
+      display: none;
+    }
+
+    .mobile-navbar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: var(--padding-medium);
+      transition: transform 0.3s ease-out;
+
+      img {
+        width: 15rem;
+        height: auto;
+      }
+
+      .private-layout-hamburger-menu {
+        display: block;
+        background-color: var(--darker-white);
+        color: var(--black);
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: var(--darker-white);
+          transform: scale(1.05);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+
+        .hamburger-icon {
+          font-size: 24px;
+          transition: transform 0.3s ease;
+
+          &.close {
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+  }
+
+  .private-layout.menu-open .mobile-navbar {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

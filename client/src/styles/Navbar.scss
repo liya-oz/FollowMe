@@ -90,3 +90,28 @@
     }
   }
 }
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 var(--padding-medium);
+
+    .navbar-top {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    img {
+      display: none;
+    }
+
+    .navbar-bottom {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+  }
+}
