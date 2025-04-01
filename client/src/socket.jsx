@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:3000";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL ?? "http://localhost:3000";
+
 const MAX_RECONNECT_ATTEMPTS = 5;
 const RECONNECT_DELAY_MS = 1000;
 
@@ -13,6 +14,7 @@ const socket = io(SOCKET_URL, {
     token: localStorage.getItem("authToken"),
   },
   reconnection: false,
+  transports: ["websocket"], // important for Heroku
 });
 
 export const getConnectionStatus = () => isConnected;
@@ -34,7 +36,7 @@ const attemptReconnect = () => {
 socket.on("connect", () => {
   isConnected = true;
   reconnectAttempts = 0;
-  console.log("Socket connected");
+  console.log("Socket connected to", SOCKET_URL);
 });
 
 socket.on("disconnect", (reason) => {
