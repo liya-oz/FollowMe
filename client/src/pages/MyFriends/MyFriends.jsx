@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Add this import
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Box,
@@ -123,7 +123,7 @@ const MyFriends = () => {
   };
 
   const handleMessage = (friend) => {
-    console.log("Start message with", friend.name);
+    navigate(`/chats?friendId=${friend.friendId._id}`);
   };
 
   const handleViewMore = () => {
@@ -176,13 +176,12 @@ const MyFriends = () => {
               friend={friend}
               onMessage={handleMessage}
               onDelete={handleDelete}
-              onProfileClick={() => handleProfileView(friend)} // Add the profile click handler
+              onProfileClick={() => handleProfileView(friend)}
             />
           ))}
         </Box>
       )}
 
-      {/* "View More" butonunu sadece daha fazla gösterilecek arkadaş varsa göster */}
       {friends.length > visibleCount && (
         <Box className="view-more-container">
           <Button

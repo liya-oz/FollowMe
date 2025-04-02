@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import "../styles/ChatFriendList.scss";
+import defaultUserIcon from "../assets/icons/user-icon.png";
 
 const ChatFriendList = ({ onSelectFriend }) => {
   const [friends, setFriends] = useState([]);
@@ -43,10 +44,11 @@ const ChatFriendList = ({ onSelectFriend }) => {
           >
             <div className="friend-info-container">
               <img
-                src={friend.friendId.profilePhoto || "/default-profile.png"}
-                alt={friend.friendId.name}
+                src={friend.friendId?.profilePhoto || defaultUserIcon}
+                alt={friend.friendId?.name}
                 className="friend-photo"
               />
+
               <div className="friend-info">
                 <div className="friend-name">{friend.friendId.name}</div>
               </div>
