@@ -14,8 +14,11 @@ const socket = io(SOCKET_URL, {
   auth: {
     token: localStorage.getItem("authToken"),
   },
-  reconnection: false,
-  transports: ["websocket"], // important for Heroku
+  reconnection: true,
+  reconnectionAttempts: MAX_RECONNECT_ATTEMPTS,
+  reconnectionDelay: RECONNECT_DELAY_MS,
+  transports: ["websocket", "polling"],
+  path: "/socket.io",
 });
 
 export const getConnectionStatus = () => isConnected;

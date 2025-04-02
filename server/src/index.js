@@ -22,7 +22,14 @@ if (port == null) {
 const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
-  cors: { origin: "*" },
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  },
+  transports: ["websocket", "polling"],
+  path: "/socket.io",
 });
 
 initSocketHandlers(io);
