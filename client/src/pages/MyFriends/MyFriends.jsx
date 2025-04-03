@@ -17,13 +17,14 @@ import { FaCommentAlt, FaTrash, FaEye } from "react-icons/fa";
 import axios from "axios";
 import "../../styles/MyFriends.scss";
 import PropTypes from "prop-types";
+import defaultUserIcon from "../assets/icons/user-icon.png";
 
 const FriendCard = ({ friend, onMessage, onDelete, onProfileClick }) => {
   return (
     <Box className="friend-card">
       <div className="friend-info-container" onClick={onProfileClick}>
         <img
-          src={friend.friendId?.profilePhoto || "/default-profile.png"}
+          src={friend.friendId?.profilePhoto || defaultUserIcon}
           alt={friend.friendId?.name}
           className="friend-photo"
         />

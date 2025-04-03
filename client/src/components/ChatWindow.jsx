@@ -4,6 +4,7 @@ import ChatMessageList from "./ChatMessageList";
 import ChatMessageInput from "./ChatMessageInput";
 import socket from "../socket";
 import { AuthContext } from "../contexts/AuthContext";
+import defaultUserIcon from "../assets/icons/user-icon.png";
 
 const ChatWindow = ({ selectedFriend }) => {
   const [messages, setMessages] = useState([]);
@@ -13,7 +14,7 @@ const ChatWindow = ({ selectedFriend }) => {
   const friend = selectedFriend?.friendId;
   const friendId = friend?._id;
   const friendName = friend?.name;
-  const friendProfilePhoto = friend?.profilePhoto || "/default-profile.png";
+  const friendProfilePhoto = friend?.profilePhoto || defaultUserIcon;
 
   useEffect(() => {
     setMessages([]);
