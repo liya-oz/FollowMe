@@ -23,7 +23,6 @@ const createRateLimiter = (limit, windowMs) => {
 const rateLimiter = createRateLimiter(10, 1000);
 
 export default function initSocketHandlers(io) {
-  // JWT auth middleware
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
     if (!token) {
