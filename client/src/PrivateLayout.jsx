@@ -1,39 +1,52 @@
-import { useContext, useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "./contexts/AuthContext";
 import Navbar from "./components/Navbar";
+import { FaBars, FaTimes } from "react-icons/fa";
 import "./styles/PrivateLayout.scss";
 
 const PrivateLayout = () => {
   const { logout } = useContext(AuthContext);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 870);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 870);
-      if (window.innerWidth >= 870) setMenuOpen(false);
-    };
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const mobileLogoClick = () => {
+    setMenuOpen(false);
+    navigate("/");
+  };
 
   return (
-    <div
-      className={`private-layout ${isMobile ? "private-layout-mobile" : ""}`}
-    >
-      {isMobile ? (
+    <div className={`private-layout ${menuOpen ? "menu-open" : ""}`}>
+      <div className="desktop-navbar">
+        <Navbar logout={logout} />
+      </div>
+
+      <div className="mobile-navbar">
+        <div className="mobile-navbar-logo" onClick={() => mobileLogoClick()}>
+          <img className="mobile-logo" src="/logo.png" alt="logo" />
+        </div>
         <button
           className="private-layout-hamburger-menu"
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={toggleMenu}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
         >
-          {menuOpen ? "╳" : "☰"}
+          {menuOpen ? (
+            <FaTimes className="hamburger-icon close" />
+          ) : (
+            <FaBars className="hamburger-icon" />
+          )}
         </button>
-      ) : (
-        <Navbar logout={logout} />
+      </div>
+      {menuOpen && (
+        <div className="mobile-menu">
+          <Navbar logout={logout} closeMenu={() => setMenuOpen(false)} />
+        </div>
       )}
-      {menuOpen && <Navbar logout={logout} />}
+
       <div className="private-layout-content">
         <main className="private-layout-main">
           <Outlet />
