@@ -17,7 +17,7 @@ import { FaCommentAlt, FaTrash, FaEye } from "react-icons/fa";
 import axios from "axios";
 import "../../styles/MyFriends.scss";
 import PropTypes from "prop-types";
-import defaultUserIcon from "../assets/icons/user-icon.png";
+import defaultUserIcon from "../../assets/icons/user-icon.png";
 
 const FriendCard = ({ friend, onMessage, onDelete, onProfileClick }) => {
   return (
