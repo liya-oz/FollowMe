@@ -20,6 +20,7 @@ export const handlePrivateMessage = async (socket, io, { to, content }) => {
     await Message.create(messageData);
     console.log("Saved message to DB:", messageData); // Extra check for DB. Just for sure
     io.to(`user:${to}`).emit("private_message", messageData);
+    io.to(`user:${from}`).emit("private_message", messageData);
   } catch (err) {
     console.error("Failed to save message:", err);
     socket.emit("error", "Failed to save message");

@@ -39,6 +39,7 @@ const ChatWindow = ({ selectedFriend }) => {
   useEffect(() => {
     if (!selectedFriend) return;
     const handlePrivateMessage = (message) => {
+      console.log("Received private message:", message);
       if (message.from === friendId || message.to === friendId) {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
