@@ -5,20 +5,28 @@ import "../styles/ExploreFooter.scss";
 import CreateEventModal from "./CreateEventModal";
 
 const ExploreFooter = ({
-  showAllEvents,
-  setShowAllEvents,
+  visibleCount,
+  setVisibleCount,
+  totalEvents,
   hideCreateButton = false,
 }) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
+  const handleToggle = () => {
+    if (visibleCount >= totalEvents) {
+      setVisibleCount(8);
+    } else {
+      setVisibleCount((prev) => prev + 8);
+    }
+  };
+
+  const isAllVisible = visibleCount >= totalEvents;
+
   return (
     <div className="explore-footer">
-      <button
-        className="footer-button"
-        onClick={() => setShowAllEvents(!showAllEvents)}
-      >
+      <button className="footer-button" onClick={handleToggle}>
         <FaEye className="button-icon" />{" "}
-        {showAllEvents ? "Show Less" : "View More"}
+        {isAllVisible ? "Show Less" : "View More"}
       </button>
 
       {!hideCreateButton && (
@@ -41,8 +49,9 @@ const ExploreFooter = ({
 };
 
 ExploreFooter.propTypes = {
-  showAllEvents: PropTypes.bool.isRequired,
-  setShowAllEvents: PropTypes.func.isRequired,
+  visibleCount: PropTypes.number.isRequired,
+  setVisibleCount: PropTypes.func.isRequired,
+  totalEvents: PropTypes.number.isRequired,
   hideCreateButton: PropTypes.bool,
 };
 

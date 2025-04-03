@@ -12,7 +12,7 @@ const DiscoveryPage = () => {
     useFilteredEvents();
 
   const [cities, setCities] = useState([]);
-  const [showAllEvents, setShowAllEvents] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(8);
 
   useEffect(() => {
     const uniqueCities = [...new Set(events.map((event) => event.location))];
@@ -30,12 +30,13 @@ const DiscoveryPage = () => {
       <EventList
         listName="Discover Events"
         events={events}
+        visibleCount={visibleCount}
         onFilterChange={handleFilterChange}
-        showAllEvents={showAllEvents}
       />
       <ExploreFooter
-        showAllEvents={showAllEvents}
-        setShowAllEvents={setShowAllEvents}
+        visibleCount={visibleCount}
+        setVisibleCount={setVisibleCount}
+        totalEvents={events.length}
         hideCreateButton={true}
       />
       <DiscoveryEventCreationBox />

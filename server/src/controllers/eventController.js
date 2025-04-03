@@ -4,7 +4,9 @@ import { logError } from "../util/logging.js";
 
 export const getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find().sort({ createdAt: 1 });
+    const events = await Event.find({ time: { $gte: new Date() } }).sort({
+      time: 1,
+    });
     res.status(200).json({ success: true, result: events });
   } catch (error) {
     logError(error);
