@@ -6,6 +6,8 @@ import {
   FaPlus,
   FaUserFriends,
   FaComments,
+  FaSignOutAlt,
+  FaUserEdit,
 } from "react-icons/fa";
 import "../styles/Navbar.scss";
 import PropTypes from "prop-types";
@@ -37,7 +39,7 @@ NavbarItem.propTypes = {
   closeMenu: PropTypes.func,
 };
 
-const Navbar = ({ closeMenu }) => {
+const Navbar = ({ closeMenu, logout, isMobile }) => {
   return (
     <div className="navbar">
       <div className="navbar-top">
@@ -82,6 +84,26 @@ const Navbar = ({ closeMenu }) => {
               to="/chats"
               closeMenu={closeMenu}
             />
+
+            {isMobile && (
+              <>
+                <NavbarItem
+                  icon={<FaUserEdit className="nav-link-icon" />}
+                  text="Edit Profile"
+                  to="/user/me"
+                  closeMenu={closeMenu}
+                />
+                <NavbarItem
+                  icon={<FaSignOutAlt className="nav-link-icon" />}
+                  text="Logout"
+                  to="/"
+                  closeMenu={() => {
+                    if (closeMenu) closeMenu();
+                    if (logout) logout();
+                  }}
+                />
+              </>
+            )}
           </ul>
         </nav>
       </div>
@@ -94,6 +116,8 @@ const Navbar = ({ closeMenu }) => {
 
 Navbar.propTypes = {
   closeMenu: PropTypes.func,
+  logout: PropTypes.func,
+  isMobile: PropTypes.bool,
 };
 
 export default Navbar;

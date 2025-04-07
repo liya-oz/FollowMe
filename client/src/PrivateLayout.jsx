@@ -43,7 +43,11 @@ const PrivateLayout = () => {
       </div>
       {menuOpen && (
         <div className="mobile-menu">
-          <Navbar logout={logout} closeMenu={() => setMenuOpen(false)} />
+          <Navbar
+            logout={logout}
+            closeMenu={() => setMenuOpen(false)}
+            isMobile={true}
+          />
         </div>
       )}
 
