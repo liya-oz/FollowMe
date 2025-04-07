@@ -80,6 +80,7 @@ const Navbar = ({ closeMenu }) => {
               icon={<FaComments className="nav-link-icon" />}
               text="Chats"
               to="/chats"
+              closeMenu={closeMenu}
             />
           </ul>
         </nav>
