@@ -37,11 +37,6 @@ const Footer = () => (
             </div>
           </div>
         </div>
-        <div className="learn-more-card">
-          <h4>Create & Join Without Limits!</h4>
-          <p>Host unlimited events effortlessly!</p>
-          <button>Learn More</button>
-        </div>
       </div>
       <p>© FollowMe 2025. All Rights Reserved.</p>
     </div>
