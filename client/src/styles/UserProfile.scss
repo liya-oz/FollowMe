@@ -178,13 +178,12 @@
 
 .friend-status-btn.MuiIconButton-root {
   background-color: transparent;
-  color: var(--primary-red);
   border-radius: 32px;
   width: 40px;
   height: 40px;
 
   &:hover {
-    background-color: rgba(231, 76, 60, 0.1);
+    background-color: rgba(179, 179, 179, 0.1);
   }
 
   &:disabled {
@@ -220,6 +219,22 @@
 
 .profile-details {
   width: 100%;
+}
+
+.profile-action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.chat-btn.MuiIconButton-root {
+  color: var(--primary-green);
+  border-radius: 32px;
+  font-weight: 500;
+
+  &:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+  }
 }
 
 @media screen and (max-width: 768px) {
