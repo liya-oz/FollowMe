@@ -17,6 +17,8 @@ import {
   FaUserPlus,
   FaTrash,
 } from "react-icons/fa6";
+
+import { FaCommentAlt } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
 import EventHistory from "../../components/EventHistory";
 import "../../styles/UserProfile.scss";
@@ -227,6 +229,10 @@ const UserProfile = ({ editable = false }) => {
     }
   };
 
+  const handleOpenChat = () => {
+    navigate(`/chats?friendId=${id}`);
+  };
+
   const formFields = ["interests", "age", "location", "about", "profilePhoto"];
 
   return (
@@ -258,26 +264,37 @@ const UserProfile = ({ editable = false }) => {
                 {formData.name || "Name"}
               </Typography>
 
-              {!editable &&
-                (isFriend ? (
+              {!editable && (
+                <Box className="profile-action-buttons">
                   <IconButton
-                    className="friend-status-btn"
-                    onClick={handleRemoveFriend}
-                    disabled={isRemovingFriend}
-                    aria-label="Remove friend"
+                    className="chat-btn"
+                    onClick={handleOpenChat}
+                    aria-label="Chat with user"
                   >
-                    <FaTrash style={{ color: "red" }} />
+                    <FaCommentAlt />
                   </IconButton>
-                ) : (
-                  <IconButton
-                    className="add-friend-btn"
-                    onClick={handleAddFriend}
-                    disabled={isAddingFriend}
-                    aria-label="Add friend"
-                  >
-                    <FaUserPlus />
-                  </IconButton>
-                ))}
+
+                  {isFriend ? (
+                    <IconButton
+                      className="friend-status-btn"
+                      onClick={handleRemoveFriend}
+                      disabled={isRemovingFriend}
+                      aria-label="Remove friend"
+                    >
+                      <FaTrash style={{ color: "gray" }} />
+                    </IconButton>
+                  ) : (
+                    <IconButton
+                      className="add-friend-btn"
+                      onClick={handleAddFriend}
+                      disabled={isAddingFriend}
+                      aria-label="Add friend"
+                    >
+                      <FaUserPlus />
+                    </IconButton>
+                  )}
+                </Box>
+              )}
             </Box>
             {editable && (
               <IconButton
