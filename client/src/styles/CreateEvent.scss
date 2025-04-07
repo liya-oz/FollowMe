@@ -1,0 +1,88 @@
+@use "./global" as *;
+.event-create-page {
+  background-color: var(--darker-white);
+  padding: var(--padding-large);
+  border-radius: var(--border-radius-large);
+  max-width: 800px;
+  margin: 3rem auto;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+
+  &__alert {
+    margin-bottom: 16px;
+
+    &.MuiAlert-root.MuiAlert-standardError {
+      background-color: var(--secondary-red);
+      color: var(--white);
+    }
+
+    &.MuiAlert-root.MuiAlert-standardSuccess {
+      background-color: var(--secondary-green);
+      color: var(--white);
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__input {
+    &.MuiTextField-root {
+      background-color: var(--white);
+      border-radius: var(--border-radius-medium);
+
+      .MuiOutlinedInput-root {
+        border-radius: var(--border-radius-medium);
+      }
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: var(--padding-small);
+    margin-top: var(--padding-medium);
+    border-radius: var(--border-radius-medium);
+
+    @media (max-width: var(--breakpoint-mobile)) {
+      flex-direction: column;
+    }
+  }
+
+  &__submit-button {
+    &.MuiButton-root {
+      background-color: var(--primary-green);
+      color: var(--white);
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: var(--border-radius-medium);
+
+      &:hover {
+        background-color: var(--light-green);
+      }
+
+      &:disabled {
+        background-color: var(--gray);
+        color: var(--dark-white);
+      }
+    }
+  }
+
+  &__cancel-button {
+    &.MuiButton-root {
+      background-color: var(--dark-red);
+      color: var(--white);
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: var(--border-radius-medium);
+
+      &:hover {
+        background-color: var(--secondary-red);
+      }
+    }
+  }
+
+  @media (max-width: var(--breakpoint-tablet)) {
+    padding: var(--padding-small);
+    max-width: 95%;
+  }
+}

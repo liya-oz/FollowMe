@@ -4,7 +4,7 @@ import validateAllowedFields from "../util/validateAllowedFields.js";
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    bio: { type: String, default: "" },
+    about: { type: String, required: false },
     interests: { type: String, default: "" },
     profilePhoto: { type: String, default: "" },
     age: { type: Number },

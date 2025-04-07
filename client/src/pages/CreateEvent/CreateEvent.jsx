@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 import { useState, useCallback, useContext } from "react";
-import { Box, Button, TextField, Typography, Alert } from "@mui/material";
+import { Box, Button, TextField, Alert, Typography } from "@mui/material";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "../../styles/CreateEvent.scss";
 
 const defaultEventData = {
   title: "",
@@ -32,10 +33,7 @@ const renderFormFields = (fields, eventData, handleChange, requiredFields) =>
       margin="normal"
       fullWidth
       className="event-create-page__input"
-      sx={{
-        backgroundColor: "var(--white)",
-        borderRadius: "var(--border-radius-small)",
-      }}
+      color="success"
     />
   ));
 
@@ -96,124 +94,87 @@ const CreateEventForm = ({ onClose }) => {
   );
 
   return (
-    <Box
-      className="event-create-page"
-      sx={{
-        backgroundColor: "var(--darker-white)",
-        padding: "var(--padding-medium)",
-        borderRadius: "var(--border-radius-medium)",
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.05)",
-      }}
-    >
-      <Typography
-        variant="h5"
-        component="h2"
-        className="event-create-page__title"
-        sx={{ color: "var(--black)" }}
-      >
-        Create New Event
-      </Typography>
-
-      {status.error && (
-        <Alert
-          severity="error"
-          className="event-create-page__alert"
-          sx={{
-            backgroundColor: "var(--secondary-red)",
-            color: "var(--white)",
-          }}
+    <div>
+      <Box className="event-create-page">
+        <Typography
+          variant="h5"
+          className="event-create-page__header"
+          sx={{ textAlign: "center", fontWeight: "bold", mb: 2 }}
         >
-          {status.error}
-        </Alert>
-      )}
-      {status.success && (
-        <Alert
-          severity="success"
-          onClose={() => setStatus({ success: "" })}
-          className="event-create-page__alert"
-          sx={{
-            backgroundColor: "var(--secondary-green)",
-            color: "var(--white)",
-          }}
-        >
-          {status.success}
-        </Alert>
-      )}
-
-      <form onSubmit={handleSubmit} className="event-create-page__form">
-        {renderFormFields(formFields, eventData, handleChange, requiredFields)}
-
-        <TextField
-          label="Event Time"
-          name="time"
-          type="datetime-local"
-          value={eventData.time}
-          onChange={handleChange}
-          required
-          margin="normal"
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-          className="event-create-page__input"
-          sx={{
-            backgroundColor: "var(--white)",
-            borderRadius: "var(--border-radius-small)",
-          }}
-        />
-
-        <TextField
-          label="Max Participants"
-          name="maxParticipants"
-          type="number"
-          value={eventData.maxParticipants}
-          onChange={handleChange}
-          required
-          margin="normal"
-          fullWidth
-          className="event-create-page__input"
-          sx={{
-            backgroundColor: "var(--white)",
-            borderRadius: "var(--border-radius-small)",
-          }}
-        />
-
-        <Box
-          sx={{
-            display: "flex",
-            gap: "var(--padding-small)",
-            mt: "var(--padding-medium)",
-          }}
-          className="event-create-page__buttons"
-        >
-          <Button
-            type="submit"
-            fullWidth
-            className="event-create-page__submit-button"
-            disabled={isSubmitting}
-            sx={{
-              backgroundColor: "var(--primary-green)",
-              color: "var(--white)",
-              "&:hover": { backgroundColor: "var(--dark-black)" },
-            }}
+          Create a New Event
+        </Typography>
+        {status.error && (
+          <Alert severity="error" className="event-create-page__alert">
+            {status.error}
+          </Alert>
+        )}
+        {status.success && (
+          <Alert
+            severity="success"
+            onClose={() => setStatus({ success: "" })}
+            className="event-create-page__alert"
           >
-            {isSubmitting ? "Submitting..." : "Create Event"}
-          </Button>
+            {status.success}
+          </Alert>
+        )}
 
-          <Button
-            type="button"
+        <form onSubmit={handleSubmit} className="event-create-page__form">
+          {renderFormFields(
+            formFields,
+            eventData,
+            handleChange,
+            requiredFields,
+          )}
+
+          <TextField
+            label="Event Time"
+            name="time"
+            type="datetime-local"
+            value={eventData.time}
+            onChange={handleChange}
+            required
+            margin="normal"
             fullWidth
-            className="event-create-page__cancel-button"
-            onClick={onClose}
-            sx={{
-              backgroundColor: "var(--primary-red)",
-              color: "var(--white)",
-              "&:hover": { backgroundColor: "var(--dark-red)" },
-            }}
-          >
-            Cancel
-          </Button>
-        </Box>
-      </form>
-    </Box>
+            InputLabelProps={{ shrink: true }}
+            className="event-create-page__input"
+            color="success"
+          />
+
+          <TextField
+            label="Max Participants"
+            name="maxParticipants"
+            type="number"
+            value={eventData.maxParticipants}
+            onChange={handleChange}
+            required
+            margin="normal"
+            fullWidth
+            className="event-create-page__input"
+            color="success"
+          />
+
+          <Box className="event-create-page__buttons">
+            <Button
+              type="submit"
+              fullWidth
+              className="event-create-page__submit-button"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Create Event"}
+            </Button>
+
+            <Button
+              type="button"
+              fullWidth
+              className="event-create-page__cancel-button"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </div>
   );
 };
 

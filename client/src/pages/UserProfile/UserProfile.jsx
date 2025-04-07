@@ -7,13 +7,16 @@ import {
   Typography,
   TextField,
   Button,
-  Checkbox,
-  FormControlLabel,
   IconButton,
   Alert,
   Avatar,
 } from "@mui/material";
-import { FaPenToSquare, FaArrowLeft } from "react-icons/fa6";
+import {
+  FaPenToSquare,
+  FaArrowLeft,
+  FaUserPlus,
+  FaTrash,
+} from "react-icons/fa6";
 import useAuth from "../../hooks/useAuth";
 import EventHistory from "../../components/EventHistory";
 import "../../styles/UserProfile.scss";
@@ -31,10 +34,13 @@ const UserProfile = ({ editable = false }) => {
     location: "",
     about: "",
     profilePhoto: "",
-    isPublic: true,
   });
   const [message, setMessage] = useState("");
   const [editModes, setEditModes] = useState({});
+  const [isAddingFriend, setIsAddingFriend] = useState(false);
+  const [addFriendResult, setAddFriendResult] = useState(null);
+  const [isFriend, setIsFriend] = useState(false);
+  const [isRemovingFriend, setIsRemovingFriend] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -72,14 +78,16 @@ const UserProfile = ({ editable = false }) => {
               profilePhoto: !data.data.profilePhoto,
             });
           }
+          if (!editable && id) {
+            await checkFriendshipStatus(id);
+          }
         } else {
           console.error("Failed to fetch user:", data.message);
         }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
+      } catch {
+        console.error("Error fetching user profile.");
       }
     };
-
     fetchUserProfile();
   }, [id, editable]);
 
@@ -115,6 +123,110 @@ const UserProfile = ({ editable = false }) => {
     }
   };
 
+  const handleAddFriend = async () => {
+    if (!id) return;
+
+    setIsAddingFriend(true);
+    try {
+      const response = await fetch("/api/friends", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+        body: JSON.stringify({ friendId: id }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsFriend(true);
+        setAddFriendResult({
+          success: true,
+          message: "Friend added successfully!",
+        });
+      } else {
+        setAddFriendResult({
+          success: false,
+          message: data.message || "Failed to add friend",
+        });
+      }
+
+      setTimeout(() => {
+        setAddFriendResult(null);
+      }, 3000);
+    } catch {
+      setAddFriendResult({
+        success: false,
+        message: "Error adding friend. Please try again.",
+      });
+    } finally {
+      setIsAddingFriend(false);
+    }
+  };
+
+  const checkFriendshipStatus = async (userId) => {
+    try {
+      const response = await fetch("/api/friends", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        const isFriendInList = data.result.some(
+          (friend) => friend.friendId._id === userId,
+        );
+
+        setIsFriend(isFriendInList);
+      } else {
+        setIsFriend(false);
+      }
+    } catch {
+      console.error("Error checking friendship status.");
+      setIsFriend(false);
+    }
+  };
+  const handleRemoveFriend = async () => {
+    if (!id) return;
+
+    setIsRemovingFriend(true);
+    try {
+      const response = await fetch(`/api/friends/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsFriend(false);
+        setAddFriendResult({
+          success: true,
+          message: "Friend removed successfully",
+        });
+      } else {
+        setAddFriendResult({
+          success: false,
+          message: data.message || "Failed to remove friend",
+        });
+      }
+
+      setTimeout(() => {
+        setAddFriendResult(null);
+      }, 3000);
+    } catch {
+      setAddFriendResult({
+        success: false,
+        message: "Error removing friend",
+      });
+    } finally {
+      setIsRemovingFriend(false);
+    }
+  };
+
   const formFields = ["interests", "age", "location", "about", "profilePhoto"];
 
   return (
@@ -129,34 +241,44 @@ const UserProfile = ({ editable = false }) => {
       </Box>
 
       <Paper className="user-profile-card">
-        <div className="user-profile-avatar-container">
-          <Avatar
-            src={formData.profilePhoto}
-            alt="Profile Photo"
-            className="user-profile-avatar"
-          />
-        </div>
-        <div className="user-profile-details">
-          <Box className="field-row name-field">
-            {editModes.name ? (
-              <TextField
-                label="Name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                variant="standard"
-                fullWidth
-                className="profile-input"
-              />
-            ) : (
+        <div className="profile-header">
+          <div className="avatar-name-container">
+            <Avatar
+              src={formData.profilePhoto}
+              alt="Profile Photo"
+              className="user-profile-avatar"
+            />
+            <Box className="name-with-actions">
               <Typography
                 className="user-profile-title"
                 variant="h4"
                 component="h1"
+                sx={{ fontWeight: "bold" }}
               >
                 {formData.name || "Name"}
               </Typography>
-            )}
+
+              {!editable &&
+                (isFriend ? (
+                  <IconButton
+                    className="friend-status-btn"
+                    onClick={handleRemoveFriend}
+                    disabled={isRemovingFriend}
+                    aria-label="Remove friend"
+                  >
+                    <FaTrash style={{ color: "red" }} />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    className="add-friend-btn"
+                    onClick={handleAddFriend}
+                    disabled={isAddingFriend}
+                    aria-label="Add friend"
+                  >
+                    <FaUserPlus />
+                  </IconButton>
+                ))}
+            </Box>
             {editable && (
               <IconButton
                 onClick={() => toggleEditMode("name")}
@@ -165,14 +287,25 @@ const UserProfile = ({ editable = false }) => {
                 <FaPenToSquare />
               </IconButton>
             )}
-          </Box>
+          </div>
+        </div>
 
-          {message && (
-            <Alert className="user-profile-alert" severity="info">
-              {message}
-            </Alert>
-          )}
+        {message && (
+          <Alert className="user-profile-alert" severity="info">
+            {message}
+          </Alert>
+        )}
 
+        {addFriendResult && (
+          <Alert
+            className="user-profile-alert"
+            severity={addFriendResult.success ? "success" : "error"}
+          >
+            {addFriendResult.message}
+          </Alert>
+        )}
+
+        <div className="profile-details">
           {editable ? (
             <Box
               component="form"
@@ -180,19 +313,23 @@ const UserProfile = ({ editable = false }) => {
               className="user-profile-form"
             >
               {formFields.map((field) => (
-                <Box
-                  key={field}
-                  className="field-row"
-                  sx={{ alignItems: "center" }}
-                >
+                <Box key={field} className="field-row">
                   <Typography
                     variant="subtitle2"
-                    sx={{ marginRight: "1rem", minWidth: "80px" }}
+                    sx={{
+                      marginRight: "1rem",
+                      minWidth: "80px",
+                      textAlign: "left",
+                    }}
                   >
                     {field.charAt(0).toUpperCase() + field.slice(1)}:
                   </Typography>
                   {!editModes[field] && formData[field] !== "" ? (
-                    <Typography variant="body1" className="display-text">
+                    <Typography
+                      variant="body1"
+                      className="display-text"
+                      sx={{ overflow: "hidden" }}
+                    >
                       {formData[field]}
                     </Typography>
                   ) : (
@@ -219,17 +356,6 @@ const UserProfile = ({ editable = false }) => {
                   </IconButton>
                 </Box>
               ))}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="isPublic"
-                    checked={formData.isPublic}
-                    onChange={handleChange}
-                  />
-                }
-                label="Public Profile"
-                className="public-profile-label"
-              />
               <Button
                 type="submit"
                 variant="contained"
@@ -242,7 +368,7 @@ const UserProfile = ({ editable = false }) => {
           ) : (
             <Box className="user-profile-form">
               {formFields
-                .filter((field) => field !== "profilePhoto") // Görüntüleme modunda profilePhoto'yu filtreleme
+                .filter((field) => field !== "profilePhoto")
                 .map((field) => (
                   <Box
                     key={field}
@@ -260,17 +386,6 @@ const UserProfile = ({ editable = false }) => {
                     </Typography>
                   </Box>
                 ))}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="isPublic"
-                    checked={formData.isPublic}
-                    disabled
-                  />
-                }
-                label="Public Profile"
-                className="public-profile-label"
-              />
             </Box>
           )}
         </div>

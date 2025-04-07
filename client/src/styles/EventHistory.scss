@@ -19,13 +19,16 @@
       padding: 0.75rem;
       border-bottom: 1px solid #ddd;
       display: flex;
-      justify-content: space-between;
       align-items: center;
       font-size: 1rem;
       color: #555;
 
       &:last-child {
         border-bottom: none;
+      }
+
+      .event-title {
+        font-size: 1rem;
       }
     }
   }
@@ -35,6 +38,7 @@
     height: 50px;
     margin-right: 0.5rem;
     object-fit: cover;
+    border-radius: 8px;
   }
 
   .attended,
@@ -52,6 +56,35 @@
     li {
       font-size: 0.95rem;
       padding: 0.5rem;
+    }
+  }
+
+  .event-history-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(110, 152, 66, 0.1);
+    }
+
+    .event-info {
+      display: flex;
+      flex-direction: column;
+      margin-left: 10px;
+    }
+
+    .event-title {
+      font-weight: bold;
+    }
+
+    .event-date {
+      font-size: 0.85rem;
+      color: #666;
     }
   }
 }
