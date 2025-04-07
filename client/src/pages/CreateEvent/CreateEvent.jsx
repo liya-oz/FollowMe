@@ -95,8 +95,6 @@ const CreateEventForm = ({ onClose }) => {
 
   return (
     <div>
-      {" "}
-      <h2 className="event-create-page-title">Create Event</h2>
       <Box className="event-create-page">
         <Typography
           variant="h5"
