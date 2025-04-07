@@ -10,7 +10,7 @@ import {
   MdPersonAdd,
 } from "react-icons/md";
 import { Button } from "@mui/material";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaCheck } from "react-icons/fa";
 
 import "../styles/EventDetailsModal.scss";
 import userIcon from "../assets/icons/user-icon.png";
@@ -25,6 +25,8 @@ const EventDetailsModal = ({ event, onClose }) => {
   const { authToken, user } = useContext(AuthContext);
   const modalRef = useRef();
   const navigate = useNavigate();
+  const [addedFriends, setAddedFriends] = useState([]);
+  const [newlyAddedFriends, setNewlyAddedFriends] = useState([]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -84,6 +86,31 @@ const EventDetailsModal = ({ event, onClose }) => {
 
     fetchAttendees();
   }, [event?._id, authToken, user?._id]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      if (!authToken || !user) return;
+
+      try {
+        const response = await fetch("/api/friends", {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          const friendIds = data.result.map((friend) => friend.friendId._id);
+          setAddedFriends(friendIds);
+        }
+      } catch (error) {
+        console.error("Error fetching friends:", error);
+      }
+    };
+
+    fetchFriends();
+  }, [authToken, user]);
 
   const currentEvent = fullEvent || event;
   if (!currentEvent) return null;
@@ -158,12 +185,17 @@ const EventDetailsModal = ({ event, onClose }) => {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Friend added successfully!");
+        setAddedFriends((prev) => [...prev, friendId]);
+        setNewlyAddedFriends((prev) => [...prev, friendId]);
+
+        setTimeout(() => {
+          setNewlyAddedFriends((prev) => prev.filter((id) => id !== friendId));
+        }, 2000);
       } else {
         throw new Error(data.message || "Failed to add friend");
       }
     } catch (error) {
-      alert(error.message || "Error adding friend.");
+      console.error("Error adding friend:", error);
     } finally {
       setIsAddingFriend(false);
     }
@@ -217,13 +249,25 @@ const EventDetailsModal = ({ event, onClose }) => {
                       style={{ cursor: "pointer" }}
                     />
                     {user && attendee.userId?._id !== user._id && (
-                      <button
-                        className="add-friend-button"
-                        onClick={() => handleAddFriend(attendee.userId?._id)}
-                        disabled={isAddingFriend}
-                      >
-                        <MdPersonAdd />
-                      </button>
+                      <>
+                        {addedFriends.includes(attendee.userId?._id) ? (
+                          newlyAddedFriends.includes(attendee.userId?._id) && (
+                            <div className="friend-added-checkmark">
+                              <FaCheck style={{ color: "green" }} />
+                            </div>
+                          )
+                        ) : (
+                          <button
+                            className="add-friend-button"
+                            onClick={() =>
+                              handleAddFriend(attendee.userId?._id)
+                            }
+                            disabled={isAddingFriend}
+                          >
+                            <MdPersonAdd />
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
                 ),
