@@ -1,7 +1,9 @@
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:3000";
-const MAX_RECONNECT_ATTEMPTS = 5;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";
+console.log("WebSocket URL from Vite:", import.meta.env.VITE_SOCKET_URL);
+
+const MAX_RECONNECT_ATTEMPTS = 50;
 const RECONNECT_DELAY_MS = 1000;
 
 let isConnected = false;
@@ -12,7 +14,11 @@ const socket = io(SOCKET_URL, {
   auth: {
     token: localStorage.getItem("authToken"),
   },
-  reconnection: false,
+  reconnection: true,
+  reconnectionAttempts: MAX_RECONNECT_ATTEMPTS,
+  reconnectionDelay: RECONNECT_DELAY_MS,
+  transports: ["websocket", "polling"],
+  path: "/socket.io",
 });
 
 export const getConnectionStatus = () => isConnected;
@@ -34,7 +40,7 @@ const attemptReconnect = () => {
 socket.on("connect", () => {
   isConnected = true;
   reconnectAttempts = 0;
-  console.log("Socket connected");
+  console.log("Socket connected to", SOCKET_URL);
 });
 
 socket.on("disconnect", (reason) => {
