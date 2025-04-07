@@ -12,12 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import arrowDownIcon from "../assets/icons/arrow-down.svg";
 
-const EventList = ({
-  listName,
-  events,
-  showAllEvents = true,
-  onFilterChange,
-}) => {
+const EventList = ({ listName, events, visibleCount, onFilterChange }) => {
   const { authToken } = useContext(AuthContext);
   const dropdownRef = useRef(null);
 
@@ -35,6 +30,7 @@ const EventList = ({
   const [categories, setCategories] = useState(["All Categories"]);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -120,9 +116,7 @@ const EventList = ({
     return matchCategory && matchFrom && matchTo;
   });
 
-  const displayedEvents = showAllEvents
-    ? filteredEvents
-    : filteredEvents.slice(0, 8);
+  const displayedEvents = filteredEvents.slice(0, visibleCount);
 
   return (
     <div className="event-list-container">
@@ -253,7 +247,7 @@ EventList.propTypes = {
       description: PropTypes.string,
     }),
   ).isRequired,
-  showAllEvents: PropTypes.bool,
+  visibleCount: PropTypes.number.isRequired,
   onFilterChange: PropTypes.func,
 };
 

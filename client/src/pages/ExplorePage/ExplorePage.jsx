@@ -9,7 +9,7 @@ const ExplorePage = () => {
     useFilteredEvents();
 
   const [cities, setCities] = useState([]);
-  const [showAllEvents, setShowAllEvents] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(8);
 
   useEffect(() => {
     const uniqueCities = [...new Set(events.map((event) => event.location))];
@@ -27,13 +27,14 @@ const ExplorePage = () => {
       <EventList
         listName="Upcoming Events"
         events={events}
-        showAllEvents={showAllEvents}
+        visibleCount={visibleCount}
         onFilterChange={handleFilterChange}
       />
 
       <ExploreFooter
-        showAllEvents={showAllEvents}
-        setShowAllEvents={setShowAllEvents}
+        visibleCount={visibleCount}
+        setVisibleCount={setVisibleCount}
+        totalEvents={events.length}
       />
     </div>
   );

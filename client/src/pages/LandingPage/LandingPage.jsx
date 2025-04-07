@@ -11,8 +11,9 @@ import ExploreFooter from "../../components/ExploreFooter";
 const LandingPage = () => {
   const { events, handleFilterChange, setSearchQuery, setSelectedCity } =
     useFilteredEvents();
-  const [showAllEvents, setShowAllEvents] = useState(false);
+
   const [cities, setCities] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(8);
   useEffect(() => {
     const uniqueCities = [...new Set(events.map((event) => event.location))];
     setCities(uniqueCities);
@@ -30,12 +31,13 @@ const LandingPage = () => {
         <EventList
           listName="Upcoming Events"
           events={events}
-          showAllEvents={showAllEvents}
+          visibleCount={visibleCount}
           onFilterChange={handleFilterChange}
         />
         <ExploreFooter
-          showAllEvents={showAllEvents}
-          setShowAllEvents={setShowAllEvents}
+          visibleCount={visibleCount}
+          setVisibleCount={setVisibleCount}
+          totalEvents={events.length}
           hideCreateButton={true}
         />
       </div>
