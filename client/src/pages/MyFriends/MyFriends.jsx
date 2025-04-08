@@ -39,7 +39,7 @@ const FriendCard = ({ friend, onMessage, onDelete, onProfileClick }) => {
           <FaCommentAlt style={{ color: "green" }} />
         </IconButton>
         <IconButton onClick={() => onDelete(friend)}>
-          <FaTrash style={{ color: "red" }} />
+          <FaTrash style={{ color: "gray" }} />
         </IconButton>
       </Box>
     </Box>

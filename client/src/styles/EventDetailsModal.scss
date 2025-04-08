@@ -257,6 +257,20 @@
   }
 }
 
+.friend-added-checkmark {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  background-color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .view-more-button {
   &.MuiButton-root {
     color: var(--primary-green);
