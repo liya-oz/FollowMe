@@ -5,8 +5,9 @@ import ChatMessageInput from "./ChatMessageInput";
 import socket from "../socket";
 import { AuthContext } from "../contexts/AuthContext";
 import defaultUserIcon from "../assets/icons/user-icon.png";
+import "../styles/ChatWindow.scss";
 
-const ChatWindow = ({ selectedFriend }) => {
+const ChatWindow = ({ selectedFriend, onBack }) => {
   const [messages, setMessages] = useState([]);
   const { authToken, decodedToken } = useContext(AuthContext);
   const currentUserId = decodedToken?.id;
@@ -55,42 +56,22 @@ const ChatWindow = ({ selectedFriend }) => {
 
   if (!selectedFriend) {
     return (
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <p style={{ fontStyle: "italic", color: "#888" }}>
-          Pick a friend to start chatting!
-        </p>
+      <div className="chat-placeholder">
+        <p>Pick a friend to start chatting!</p>
       </div>
     );
   }
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-      <div
-        style={{
-          padding: "10px",
-          borderBottom: "1px solid #ccc",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <img
-          src={friendProfilePhoto}
-          alt={friendName}
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: "50%",
-            marginRight: 10,
-          }}
-        />
+    <div className="chat-window">
+      <div className="chat-header">
+        <img src={friendProfilePhoto} alt={friendName} />
         <strong>{friendName}</strong>
+        {onBack && (
+          <button className="chat-back-button" onClick={onBack}>
+            ← Back
+          </button>
+        )}
       </div>
 
       <ChatMessageList
@@ -105,6 +86,7 @@ const ChatWindow = ({ selectedFriend }) => {
 
 ChatWindow.propTypes = {
   selectedFriend: PropTypes.object,
+  onBack: PropTypes.func,
 };
 
 export default ChatWindow;

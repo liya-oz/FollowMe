@@ -1,0 +1,27 @@
+.chat-message-input {
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f9f9f9;
+}
+
+.chat-message-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+}
+
+.chat-message-input button {
+  padding: 8px 16px;
+  background-color: #6e9842;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
