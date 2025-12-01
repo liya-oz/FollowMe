@@ -10,7 +10,7 @@
 <img alt="Sass" src="https://img.shields.io/badge/Sass-1.57-pink?logo=sass">
 </div>
 
-# FollowMe App
+# [**FollowMe App**](https://c50-group-a-eb9c219c9326.herokuapp.com/)
 
 **FollowMe** is a social platform for discovering, hosting, and joining in-person events. It features real-time private chat, rich filtering, and responsive design that makes it simple to connect and meet new people.
 
@@ -21,8 +21,10 @@ This platform makes it easy to:
 - Join events and chat before you meet
 
 ---
+<img width="1394" height="707" alt="image" src="https://github.com/user-attachments/assets/d3cb2c85-9774-4c54-ba5a-c6e2b16c8431" />
 
-[**Click here to try the app!**](https://c50-group-a-eb9c219c9326.herokuapp.com/)
+---
+[DEMO: Click here to try the app!](https://c50-group-a-eb9c219c9326.herokuapp.com/)
 
 ## Main Features
 
