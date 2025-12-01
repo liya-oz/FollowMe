@@ -1,119 +1,126 @@
-`TODO: Add a nice screenshot of the app!`
+<div>
+<img alt="GitHub license" src="https://img.shields.io/badge/license-MIT-blue">
+<img alt="React" src="https://img.shields.io/badge/React-19.0.0-61DAFB?logo=react">
+<img alt="Vite" src="https://img.shields.io/badge/Vite-5.0.0-purple?logo=vite">
+<img alt="Node.js" src="https://img.shields.io/badge/Node.js-v22-green?logo=node.js">
+<img alt="Express" src="https://img.shields.io/badge/Express-5.1.0-lightgrey?logo=express">
+<img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-7.0.0-4EA94B?logo=mongodb">
+<img alt="Socket.IO" src="https://img.shields.io/badge/Socket.IO-4.7.4-black?logo=socket.io">
+<img alt="JWT" src="https://img.shields.io/badge/JWT-auth-orange?logo=jsonwebtokens">
+<img alt="Sass" src="https://img.shields.io/badge/Sass-1.57-pink?logo=sass">
+</div>
 
-# Cohort XX final project
+# FollowMe App
 
-This is the final project for the HackYourFuture curriculum we did as a cohort using the [MERN stack](https://www.mongodb.com/resources/languages/mern-stack) by following the agile methodology with our team and a group of mentors. A quick guide to what we built:
+**FollowMe** is a social platform for discovering, hosting, and joining in-person events. It features real-time private chat, rich filtering, and responsive design that makes it simple to connect and meet new people.
 
-> TODO: Add short description of the app
+This platform makes it easy to:
 
-`[Click here for the Demo version](TODO: add link)`
+- Find meetups happening in town
+- Connect with like-minded people
+- Join events and chat before you meet
 
-## 1. Setup
+---
 
-First, to setup all the directories run the following in the main directory:
+[**Click here to try the app!**](https://c50-group-a-eb9c219c9326.herokuapp.com/)
 
-`npm install`
+## Main Features
 
-`npm run setup`
+- **Browse and Discover Events**: Filter and search by city, category, and title. Each event has a cover image, description, host info, location, time, and list of participants.
+- **Join and Host Events**: Sign up, create your own events, or join others with one click.
+- **User Profiles**: Personalize your profile with photo, age, hobbies, city, interests. View public profiles of event attendees.
+- **Friends List**: Add users as friends or search attendees; sort, filter, and chat with friends.
+- **Real-Time Messaging**: One-on-one real-time chats powered by Socket.IO. Chat with friends before or after events.
+- **Secure Authentication**: JWT-based login, password hashing, and profile privacy settings.
+- **Mobile-Friendly UI**: Responsive burger menu sidebar and touch-friendly navigation.
 
-The first command will install `cypress` and some small libraries needed for running the rest of the commands. The second will go into the `client` and `server` directories and set those up to be ran.
+---
 
-In the `client` and `server` directory there are two `.env.example` files. Create a copy and rename that to `.env`. Then follow the instructions in those files to fill in the right values.
+## Quick Start
 
-To run the app in dev mode you can run the following command in the main directory:
+### Prerequisites
 
-`npm run dev`
+- **Node.js (v22+)**
+- **MongoDB**
+- **npm**
+- **Git**
 
-## 2. Code structure
+### Setup Instructions
 
+```bash
+git clone https://github.com/hyf-final-project/followme-app.git
+cd followme-app
+
+npm install
+npm run setup      # initializes client and server
+
+# Create .env files from respective .env.example in client and server
+npm run dev        # runs both client and server in development
 ```
-client
-├── public
-└── src
-|   └── __tests__
-|   └── __testUtils__
-|   └── components
-|   └── hooks
-|   └── pages
-|       └── __tests__
-|       └── components
-|   └── util
-|   index.jsx
-cypress
-|   └── fixtures
-|   └── integration
-|   └── plugins
-|   └── support
-server
-└── src
-    └── __tests__
-    └── __testUtils__
-    └── controllers
-    └── db
-    └── models
-    └── routes
-    └── util
-    index.js
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend**
+
+- React 19 & Vite
+- Sass
+- React Testing Library & Jest
+
+**Backend**
+
+- Node.js, Express.js
+- MongoDB & Mongoose
+- JWT and bcrypt
+- Supertest & Jest for API
+
+**Real-Time Features**
+
+- Socket.IO
+
+**Dev Tools**
+
+- ESLint, Prettier, Husky
+- Cypress
+- Dotenv, Concurrently
+
+---
+
+## Structure
+
+```plaintext
+client/
+├── public/
+└── src/
+    ├── __tests__/
+    ├── __testUtils__/
+    ├── components/
+    ├── hooks/
+    ├── pages/
+        ├── __tests__/
+        └── components/
+    ├── util/
+    └── index.jsx
+cypress/
+    ├── fixtures/
+    ├── integration/
+    ├── plugins/
+    └── support/
+server/
+└── src/
+    ├── __tests__/
+    ├── __testUtils__/
+    ├── controllers/
+    ├── db/
+    ├── models/
+    ├── routes/
+    ├── util/
+    └── index.js
 ```
 
-### 2.1 Client structure
+---
 
-- `public` || public facing client code
-- `__tests__` || any `jest` tests for specific components will be in a `__tests__` folder on the same level
-- `__testUtils__` || any code that is only being used in the tests is put in the `__testUtils__` folder to separate that away from the rest of the code
-- `components` || all of our shared components that are used over multiple pages
-- `hooks` || all of our custom hooks
-- `pages` || the page components of our app, any routing will go between these components
-- `pages/components` || components used specifically on those pages
-- `util` || any utility functions that can be used anywhere on the client side
-- `main.jsx` || the start point of the client
-- `vite.config.js` || to configure vite
+## License MIT
 
-### 2.2 Cypress structure
-
-- `fixtures` || any data/files that `cypress` needs can be placed here
-- `integration` || all of our tests are in here, separated in folders based on the pages in our app
-- `plugins` || any plugins for our `cypress` configuration can be placed here
-- `support` || custom commands and other support files for `cypress` can be placed here
-
-### 2.3 Server structure
-
-- `__tests__` || any `jest` tests for the api endpoints as that is our testing strategy for the backend
-- `__testUtils__` || any code that is only being used in the tests is put in the `__testUtils__` folder to separate that away from the rest of the code
-- `controllers` || all of our controller functions that interact with the database
-- `db` || all of our configuration for the database
-- `models` || all of our `mongoose` models will be placed here
-- `routes` || code to match up the API with our controllers
-- `util` || any utility functions that can be used anywhere on the server side
-- `index.js` || the start point of the server
-
-## 3. Stack / external libraries
-
-The base stack of the app is a MERN stack (Mongoose, Express, React, Node). Next to that we make use of the following extras:
-
-### 3.1 Configuration libraries
-
-- `dotenv` || To load the .env variables into the process environment. See [docs](https://www.npmjs.com/package/dotenv)
-- `vite` || To bundle our React app and create a static app to host. See [docs](https://vite.dev/)
-- `husky` || To run our tests and linter before committing. See [docs](https://typicode.github.io/husky/#/)
-- `eslint` || To check our code. We have different configurations for frontend and backend. You can check out the configuration in the `.eslintrc.(c)js` files in the respective `client` and `server` folders. See [docs](https://eslint.org/)
-- `prettier` || To automatically format our code. See [docs](https://prettier.io/)
-- `concurrently` || To run commands in parallel. See [docs](https://github.com/open-cli-tools/concurrently#readme)
-
-For more information on how these work together including the automatic deployment to heroku, have a look at our detailed [DEV](./DEV.md) file.
-
-### 3.2 Client-side libraries
-
-- `@testing-library/*` || We use React Testing Library to write all of our tests. See [docs](https://testing-library.com/docs/react-testing-library/intro/)
-- `jest` || To run our tests and coverage. See [docs](https://jestjs.io/)
-- `jest-fetch-mock` || To mock out the backend for our testing purposes. See [docs](https://github.com/jefflau/jest-fetch-mock#readme)
-- `prop-types` || To type-check our components. See [docs](https://github.com/facebook/prop-types)
-
-### 3.3 Server-side libraries
-
-- `nodemon` || To automatically restart the server when in development mode. See [docs](https://nodemon.io/)
-- `jest` || To run our tests and coverage. See [docs](https://jestjs.io/)
-- `supertest` || To more easily test our endpoints. See [docs](https://github.com/visionmedia/supertest#readme)
-- `mongodb-memory-server` || To mock out our database in our backend tests. See [docs](https://github.com/nodkz/mongodb-memory-server)
-- `cors` || To open up our API. See [docs](https://github.com/expressjs/cors#readme)
-- `mongoose` || To add schemas to our database. See [docs](https://mongoosejs.com/)
+---
